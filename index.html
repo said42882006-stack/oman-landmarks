@@ -60,7 +60,7 @@ html[lang=ar] .brand h1,html[lang=ar] .sh-head h2{letter-spacing:0}
 .pin{stroke:#fff;cursor:pointer;transition:opacity .25s;filter:drop-shadow(0 1px 1.5px rgba(0,0,0,.35))}.pin.hide{opacity:0;pointer-events:none}.pin:hover{stroke:#1d1d1f}
 .v-facts{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:8px auto 0;max-width:680px}.v-facts:empty{display:none}
 .v-facts span,.v-facts a{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.14);color:#fff;text-decoration:none}
-.v-facts .whs{background:rgba(10,132,255,.55)}
+.v-facts .whs{background:rgba(10,132,255,.55)}.v-facts .cm{background:rgba(52,168,83,.5)}
 .pl.sea text{fill:#2b5d9b;font-weight:600;font-style:italic;stroke:rgba(255,255,255,.4);opacity:.9}
 .pl.cty text{fill:#6e6e73;font-weight:700;stroke:rgba(255,255,255,.65)}
 
@@ -627,7 +627,7 @@ document.addEventListener("keydown",e=>{if((e.key==="k"&&(e.metaKey||e.ctrlKey))
 /* ---------- viewer (Photos style) ---------- */
 const V=$("viewer"),track=$("track");let vl=null,vlist=[],vi=0,zoom=1;
 function openViewer(l,gi,fromImg){
-  vl=l;vlist=PHOTOS[l.k];vi=0;zoom=1;
+  vl=l;vlist=PHOTOS[l.k].slice();vi=0;zoom=1;
   $("vTitle").textContent=ln(l);$("vSub").textContent=gfull(GOVS[gi])+" • "+tn(l.type);$("vDesc").textContent=ld(l);
   {const F=[];const W=(GOVS[gi].wil||[]).find(x=>x.n===l.w);
     if(l.whs)F.push('<span class="whs">'+ic("landmark")+(EN()?"UNESCO World Heritage Site":"موقع تراث عالمي – يونسكو")+'</span>');
@@ -638,11 +638,9 @@ function openViewer(l,gi,fromImg){
   const vb=$("vWiki"),vp=$("vWpanel");vp.hidden=true;vp.innerHTML="";vb.hidden=true;
   if(l.wt){vb.innerHTML=ic("book")+tr("readwiki");wiki(l.wt).then(w=>{if(vl!==l)return;vb.hidden=false;
     vb.onclick=()=>{vp.hidden=!vp.hidden;if(!vp.innerHTML)vp.innerHTML=esc(w.x)+' <a href="'+w.url+'" target="_blank" rel="noopener">'+tr("full")+'</a>';};}).catch(()=>{});}
-  track.innerHTML=vlist.map(p=>'<div class="slide"><img src="'+p.f+'" alt="'+esc(ln(l))+'" draggable="false"></div>').join("");
-  $("strip").innerHTML=vlist.map((p,k)=>'<button aria-label="'+tr("photo")+(k+1)+'"><img src="'+p.t+'" alt=""></button>').join("");
-  $("strip").querySelectorAll("button").forEach((b,k)=>b.onclick=()=>go(k));
-  $("strip").style.display=vlist.length>1?"flex":"none";
-  $("vPrev").style.display=$("vNext").style.display=vlist.length>1?"grid":"none";
+  track.innerHTML="";$("strip").innerHTML="";addSlides(vlist,0,l);
+  commonsFor(l).then(extra=>{if(vl!==l||!extra.length)return;const n0=vlist.length;vlist.push(...extra);addSlides(extra,n0,l);
+    const f=$("vFacts");if(f&&!f.querySelector(".cm"))f.insertAdjacentHTML("beforeend",'<span class="cm">'+ic("images")+"+"+extra.length+(EN()?" from Wikimedia Commons":" صورة من ويكيميديا كومنز")+'</span>');go(vi,false);}).catch(()=>{});
   V.classList.add("open");V.classList.remove("chrome-off","ready");go(0,false);
   const target=track.children[0].querySelector("img");
   if(fromImg&&!matchMedia("(prefers-reduced-motion:reduce)").matches){
@@ -654,7 +652,33 @@ function openViewer(l,gi,fromImg){
     setTimeout(()=>{target.style.opacity=1;fl.remove();},470);
   } else requestAnimationFrame(()=>V.classList.add("ready"));
 }
+function addSlides(list,start,l){
+  track.insertAdjacentHTML("beforeend",list.map(p=>'<div class="slide"><img data-src="'+esc(p.f)+'" alt="'+esc(ln(l))+'" draggable="false"'+(p.r?' referrerpolicy="no-referrer"':'')+'></div>').join(""));
+  $("strip").insertAdjacentHTML("beforeend",list.map((p,k)=>'<button aria-label="'+tr("photo")+(start+k+1)+'"><img loading="lazy" src="'+esc(p.t)+'" alt=""'+(p.r?' referrerpolicy="no-referrer"':'')+'></button>').join(""));
+  [...$("strip").children].forEach((b,k)=>b.onclick=()=>go(k));
+  $("strip").style.display=vlist.length>1?"flex":"none";$("vPrev").style.display=$("vNext").style.display=vlist.length>1?"grid":"none";
+  if(start===0){const im=track.children[0]&&track.children[0].querySelector("img");if(im)im.src=im.dataset.src;}}
+/* more photos straight from Wikimedia Commons (shown, not stored) */
+const CM=new Map();
+function commonsFor(l){if(CM.has(l.k))return CM.get(l.k);
+  const pr=(async()=>{const api="https://commons.wikimedia.org/w/api.php?action=query&format=json&origin=*&prop=imageinfo&iiprop=url|size|extmetadata&iiurlwidth=1280&iiextmetadatafilter=Artist|LicenseShortName&";
+    const get=q=>fetch(api+q).then(r=>r.ok?r.json():null).catch(()=>null);const seen=new Set(),out=[];
+    (PHOTOS[l.k]||[]).forEach(p=>{const m=decodeURIComponent(p.p||"").match(/File:(.+)$/);if(m)seen.add(m[1].replace(/_/g," ").toLowerCase());});
+    const add=j=>{if(!j||!j.query||!j.query.pages)return;Object.values(j.query.pages).sort((a,b)=>(a.index||0)-(b.index||0)).forEach(p=>{const i=p.imageinfo&&p.imageinfo[0],t=p.title.replace(/^File:/,"");
+      if(!i||!/\.(jpe?g|png|webp)$/i.test(t)||i.width<700||i.height<450||seen.has(t.toLowerCase()))return;seen.add(t.toLowerCase());
+      const m=i.extmetadata||{},art=((m.Artist&&m.Artist.value)||"").replace(/<[^>]+>/g,"").replace(/\s+/g," ").trim().slice(0,60);
+      const f=i.thumburl||i.url,th=/\/\d+px-/.test(f)?f.replace(/\/\d+px-/,"/500px-"):f;
+      out.push({f,t:th,a:art||"Wikimedia Commons",l:(m.LicenseShortName&&m.LicenseShortName.value)||"",p:i.descriptionurl,r:1});});};
+    let cat=null;
+    if(l.q){const e=await fetch("https://www.wikidata.org/w/api.php?action=wbgetclaims&format=json&origin=*&property=P373&entity="+l.q).then(r=>r.json()).catch(()=>null);
+      const c=e&&e.claims&&e.claims.P373&&e.claims.P373[0];cat=c&&c.mainsnak&&c.mainsnak.datavalue&&c.mainsnak.datavalue.value;
+      add(await get("generator=search&gsrnamespace=6&gsrlimit=12&gsrsearch="+encodeURIComponent("haswbstatement:P180="+l.q)));}
+    if(cat)add(await get("generator=categorymembers&gcmtype=file&gcmlimit=30&gcmtitle="+encodeURIComponent("Category:"+cat)));
+    if(out.length<3&&l.en){const nm=l.en.replace(/\(.*?\)/g,"").split(/&| and /)[0].trim();add(await get("generator=search&gsrnamespace=6&gsrlimit=10&gsrsearch="+encodeURIComponent('intitle:"'+nm+'" Oman')));}
+    return out.slice(0,24);})();
+  CM.set(l.k,pr);return pr;}
 function go(n,animate=true){if(!vlist.length)return;vi=Math.max(0,Math.min(vlist.length-1,n));setZoom(1);
+  for(let k=vi-1;k<=vi+1;k++){const im=track.children[k]&&track.children[k].querySelector("img");if(im&&!im.getAttribute("src"))im.src=im.dataset.src;}
   track.style.transition=animate?"transform .45s var(--ease)":"none";track.style.transform="translateX("+(-vi*100)+"%)";
   $("strip").querySelectorAll("button").forEach((b,k)=>b.classList.toggle("on",k===vi));$("strip").children[vi]?.scrollIntoView({inline:"center",block:"nearest",behavior:animate?"smooth":"auto"});
   const p=vlist[vi];if(vl)$("vDesc").textContent=p.c?(EN()&&p.c_en?p.c_en:p.c):ld(vl);$("vCredit").innerHTML=(vlist.length>1?(vi+1)+tr("of")+vlist.length+" • ":"")+tr("by")+esc(p.a||tr("unk"))+" • "+esc(p.l)+(p.p&&p.p!=="#"?' • <a href="'+p.p+'" target="_blank" rel="noopener">'+tr("src")+'</a>':'');}
