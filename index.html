@@ -249,6 +249,7 @@ html[lang=ar] .brand h1,html[lang=ar] .sh-head h2{letter-spacing:0}
 @media (max-width:820px){.v-nav{display:none!important}.slide{padding:64px 0 170px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
+<link rel="preconnect" href="https://upload.wikimedia.org" crossorigin><link rel="preconnect" href="https://commons.wikimedia.org" crossorigin><link rel="dns-prefetch" href="https://query.wikidata.org">
 </head>
 <body>
 <div id="stage">
@@ -517,7 +518,7 @@ function renderBody(){
   lms.forEach((l,k)=>{const ph=PHOTOS[l.k],T=TYPES[l.type];
     const b=document.createElement("button");
     if(k===0){b.className="feature";
-      b.innerHTML='<img src="'+ph[0].t+'" alt="'+esc(ln(l))+'"><span class="cnt">'+ic("images")+ph.length+'</span><div class="ov"><div class="eyebrow">'+ic(l.type)+tn(l.type)+(l.w?' • '+esc(wil(l.w,g)):'')+'</div><h3>'+esc(ln(l))+'</h3><p>'+esc(ld(l))+'</p></div>';
+      b.innerHTML='<img decoding="async" src="'+ph[0].t+'" alt="'+esc(ln(l))+'"><span class="cnt">'+ic("images")+ph.length+'</span><div class="ov"><div class="eyebrow">'+ic(l.type)+tn(l.type)+(l.w?' • '+esc(wil(l.w,g)):'')+'</div><h3>'+esc(ln(l))+'</h3><p>'+esc(ld(l))+'</p></div>';
       body.appendChild(b);if(lms.length>1){const h=document.createElement("div");h.className="sec-title";h.textContent=filter==="all"?tr("others"):tr("more");body.appendChild(h);const gr=document.createElement("div");gr.className="grid";gr.id="grid";body.appendChild(gr);}}
     else{b.className="tile";
       b.innerHTML='<div class="ph"><img loading="lazy" src="'+ph[0].t+'" alt="'+esc(ln(l))+'">'+(ph.length>1?'<span class="cnt">'+ic("images")+ph.length+'</span>':'')+'</div><div class="cap"><b>'+esc(ln(l))+'</b><small style="color:'+T.c+'">'+ic(l.type)+tn(l.type)+'</small><span class="w">'+esc(wil(l.w,g))+'</span></div>';
@@ -554,37 +555,50 @@ function wikiCard(title,parent,before){if(!title)return null;const c=document.cr
     requestAnimationFrame(()=>{const p=c.querySelector("p");if(p.scrollHeight<=p.clientHeight+2)b.style.visibility="hidden";});
   }).catch(()=>c.remove());return c;}
 function wikiAr(t){const L=LANG;LANG="ar";try{return wiki(t);}finally{LANG=L;}}
+/* direct upload.wikimedia.org thumbnails (no redirect hop) */
+function md5(s){function c(a,b){var d=(a&65535)+(b&65535);return(a>>16)+(b>>16)+(d>>16)<<16|d&65535}function h(q,a,b,x,s,t){return c(c(c(a,q),c(x,t))<<s|c(c(a,q),c(x,t))>>>32-s,b)}
+  function f(a,b,c_,d,x,s,t){return h(b&c_|~b&d,a,b,x,s,t)}function g(a,b,c_,d,x,s,t){return h(b&d|c_&~d,a,b,x,s,t)}function k(a,b,c_,d,x,s,t){return h(b^c_^d,a,b,x,s,t)}function i(a,b,c_,d,x,s,t){return h(c_^(b|~d),a,b,x,s,t)}
+  s=unescape(encodeURIComponent(s));var n=s.length,x=[],j;for(j=0;j<n;j++)x[j>>2]|=s.charCodeAt(j)<<(j%4)*8;x[n>>2]|=128<<(n%4)*8;x[(n+8>>6<<4)+14]=n*8;
+  var a=1732584193,b=-271733879,c_=-1732584194,d=271733878;for(j=0;j<x.length;j+=16){var A=a,B=b,C=c_,D=d,X=m=>x[j+m]|0;
+  a=f(a,b,c_,d,X(0),7,-680876936);d=f(d,a,b,c_,X(1),12,-389564586);c_=f(c_,d,a,b,X(2),17,606105819);b=f(b,c_,d,a,X(3),22,-1044525330);a=f(a,b,c_,d,X(4),7,-176418897);d=f(d,a,b,c_,X(5),12,1200080426);c_=f(c_,d,a,b,X(6),17,-1473231341);b=f(b,c_,d,a,X(7),22,-45705983);a=f(a,b,c_,d,X(8),7,1770035416);d=f(d,a,b,c_,X(9),12,-1958414417);c_=f(c_,d,a,b,X(10),17,-42063);b=f(b,c_,d,a,X(11),22,-1990404162);a=f(a,b,c_,d,X(12),7,1804603682);d=f(d,a,b,c_,X(13),12,-40341101);c_=f(c_,d,a,b,X(14),17,-1502002290);b=f(b,c_,d,a,X(15),22,1236535329);
+  a=g(a,b,c_,d,X(1),5,-165796510);d=g(d,a,b,c_,X(6),9,-1069501632);c_=g(c_,d,a,b,X(11),14,643717713);b=g(b,c_,d,a,X(0),20,-373897302);a=g(a,b,c_,d,X(5),5,-701558691);d=g(d,a,b,c_,X(10),9,38016083);c_=g(c_,d,a,b,X(15),14,-660478335);b=g(b,c_,d,a,X(4),20,-405537848);a=g(a,b,c_,d,X(9),5,568446438);d=g(d,a,b,c_,X(14),9,-1019803690);c_=g(c_,d,a,b,X(3),14,-187363961);b=g(b,c_,d,a,X(8),20,1163531501);a=g(a,b,c_,d,X(13),5,-1444681467);d=g(d,a,b,c_,X(2),9,-51403784);c_=g(c_,d,a,b,X(7),14,1735328473);b=g(b,c_,d,a,X(12),20,-1926607734);
+  a=k(a,b,c_,d,X(5),4,-378558);d=k(d,a,b,c_,X(8),11,-2022574463);c_=k(c_,d,a,b,X(11),16,1839030562);b=k(b,c_,d,a,X(14),23,-35309556);a=k(a,b,c_,d,X(1),4,-1530992060);d=k(d,a,b,c_,X(4),11,1272893353);c_=k(c_,d,a,b,X(7),16,-155497632);b=k(b,c_,d,a,X(10),23,-1094730640);a=k(a,b,c_,d,X(13),4,681279174);d=k(d,a,b,c_,X(0),11,-358537222);c_=k(c_,d,a,b,X(3),16,-722521979);b=k(b,c_,d,a,X(6),23,76029189);a=k(a,b,c_,d,X(9),4,-640364487);d=k(d,a,b,c_,X(12),11,-421815835);c_=k(c_,d,a,b,X(15),16,530742520);b=k(b,c_,d,a,X(2),23,-995338651);
+  a=i(a,b,c_,d,X(0),6,-198630844);d=i(d,a,b,c_,X(7),10,1126891415);c_=i(c_,d,a,b,X(14),15,-1416354905);b=i(b,c_,d,a,X(5),21,-57434055);a=i(a,b,c_,d,X(12),6,1700485571);d=i(d,a,b,c_,X(3),10,-1894986606);c_=i(c_,d,a,b,X(10),15,-1051523);b=i(b,c_,d,a,X(1),21,-2054922799);a=i(a,b,c_,d,X(8),6,1873313359);d=i(d,a,b,c_,X(15),10,-30611744);c_=i(c_,d,a,b,X(6),15,-1560198380);b=i(b,c_,d,a,X(13),21,1309151649);a=i(a,b,c_,d,X(4),6,-145523070);d=i(d,a,b,c_,X(11),10,-1120210379);c_=i(c_,d,a,b,X(2),15,718787259);b=i(b,c_,d,a,X(9),21,-343485551);
+  a=c(a,A);b=c(b,B);c_=c(c_,C);d=c(d,D);}var o="";[a,b,c_,d].forEach(v=>{for(var q=0;q<4;q++)o+=((v>>q*8)&255).toString(16).padStart(2,"0");});return o;}
+function cthumb(name,w){const n=name.replace(/ /g,"_"),m=md5(n),e=encodeURIComponent(n);return "https://upload.wikimedia.org/wikipedia/commons/thumb/"+m[0]+"/"+m.slice(0,2)+"/"+e+"/"+w+"px-"+e+(/\.(tiff?|svg)$/i.test(n)?".jpg":"");}
+document.addEventListener("error",e=>{const t=e.target;if(t&&t.tagName==="IMG"&&/\/thumb\//.test(t.src)&&!t.dataset.fb){t.dataset.fb=1;t.src=t.src.replace(/\/thumb\/(.+)\/[^/]+$/,"/$1");}},true);
+const BAD=/(map|karte|plan|logo|flag|diagram|svg|stamp|coin|banknote|chart|locator|location|seal|emblem|\.pdf|\.tif)/i;
 /* ---------- many more landmarks, live from Wikidata (SPARQL) ---------- */
-const WDCLS={Q57821:"fort",Q23413:"fort",Q1785071:"fort",Q57831:"fort",Q839954:"arch",Q162875:"arch",Q35509:"cave",Q187971:"nature",Q8502:"nature",Q40080:"nature",Q23442:"nature",Q179049:"nature",Q34038:"nature",Q124714:"nature",Q46831:"nature",Q473972:"nature",Q8514:"nature",Q44782:"port",Q283202:"port",Q32815:"city",Q33506:"city",Q16560:"city",Q510177:"city",Q39715:"city",Q4989906:"city"};
+const WDCLS={Q57821:"fort",Q23413:"fort",Q1785071:"fort",Q57831:"fort",Q839954:"arch",Q162875:"arch",Q35509:"cave",Q187971:"nature",Q34038:"nature",Q124714:"nature",Q33506:"city",Q16560:"city",Q510177:"city"};
 const WD_TTL=864e5;
 async function wdLandmarks(){let rows=null;
-  try{const c=JSON.parse(localStorage.getItem("om_wdq")||"null");if(c&&Date.now()-c.t<WD_TTL)rows=c.r;}catch(e){}
+  try{const c=JSON.parse(localStorage.getItem("om_wdq2")||"null");if(c&&Date.now()-c.t<WD_TTL)rows=c.r;}catch(e){}
   if(!rows){const vals=Object.entries(WDCLS).map(([q,t])=>"(wd:"+q+' "'+t+'")').join(" ");
     const Q='SELECT ?item ?type ?coord ?img ?ar ?en ?dar ?den ?arw ?enw ?loc WHERE { ?item wdt:P17 wd:Q842; wdt:P625 ?coord; wdt:P18 ?img; wdt:P31/wdt:P279? ?cls. VALUES (?cls ?type) {'+vals+'} '+
       'OPTIONAL{?item rdfs:label ?ar FILTER(lang(?ar)="ar")} OPTIONAL{?item rdfs:label ?en FILTER(lang(?en)="en")} OPTIONAL{?item schema:description ?dar FILTER(lang(?dar)="ar")} OPTIONAL{?item schema:description ?den FILTER(lang(?den)="en")} '+
       'OPTIONAL{?arw schema:about ?item; schema:isPartOf <https://ar.wikipedia.org/>} OPTIONAL{?enw schema:about ?item; schema:isPartOf <https://en.wikipedia.org/>} OPTIONAL{?item wdt:P131 ?loc} }';
     const r=await fetch("https://query.wikidata.org/sparql?format=json&query="+encodeURIComponent(Q),{headers:{Accept:"application/sparql-results+json"}});if(!r.ok)return;
     const j=await r.json();rows=j.results.bindings.map(b=>{const o={};for(const k in b)o[k]=b[k].value;return o;});
-    try{localStorage.setItem("om_wdq",JSON.stringify({t:Date.now(),r:rows}));}catch(e){}}
+    try{localStorage.setItem("om_wdq2",JSON.stringify({t:Date.now(),r:rows}));}catch(e){}}
   addWdLandmarks(rows);}
 function addWdLandmarks(rows){const by=new Map(),pri={fort:0,arch:1,cave:2,port:3,nature:4,city:5};
   rows.forEach(b=>{const q=b.item.split("/").pop();let o=by.get(q);if(!o){o={q,types:new Set(),locs:new Set(),b};by.set(q,o);}o.types.add(b.type);if(b.loc)o.locs.add(b.loc.split("/").pop());["ar","en","dar","den","arw","enw","img","coord"].forEach(k=>{if(b[k]&&!o.b[k])o.b[k]=b[k];});});
   const known=new Set(),pts=[];GOVS.forEach(g=>g.landmarks.forEach(l=>{if(l.q)known.add(l.q);if(l.ll)pts.push(l.ll);}));
   const wq=new Map();GOVS.forEach((g,gi)=>(g.wil||[]).forEach(w=>{if(w.q)wq.set(w.q,{gi,w});}));
   const paths=nodes.map(n=>n.querySelector("path"));let added=0;const per=new Map();
-  [...by.values()].forEach(o=>{const b=o.b;if(known.has(o.q)||!(b.ar||b.en))return;
+  [...by.values()].forEach(o=>{const b=o.b;if(known.has(o.q)||!b.ar||!(b.arw||b.enw)||BAD.test(b.img||""))return;
     const m=/Point\(([-\d.]+) ([-\d.]+)\)/.exec(b.coord||"");if(!m)return;const ll=[+m[1],+m[2]];
     if(pts.some(p=>Math.abs(p[0]-ll[0])<.006&&Math.abs(p[1]-ll[1])<.006))return;
     const [x,y]=geo(...ll);let gi=paths.findIndex(p=>p.isPointInFill(new DOMPoint(x,y)));
     let W=null;for(const lq of o.locs){if(wq.has(lq)){W=wq.get(lq);break;}}
     if(gi<0&&W)gi=W.gi;if(gi<0)return;if(W&&W.gi!==gi)W=null;
-    const type=[...o.types].sort((a,c)=>pri[a]-pri[c])[0];const key=gi+type;const n=per.get(key)||0;if(n>=(type==="city"?10:25))return;per.set(key,n+1);
+    const type=[...o.types].sort((a,c)=>pri[a]-pri[c])[0];const key=gi+type;const n=per.get(key)||0;if(n>=(type==="city"?6:15))return;per.set(key,n+1);
     const g=GOVS[gi],k="wd_"+o.q,img=b.img.replace(/^http:/,"https:");
     const l={k,ar:b.ar||b.en,en:b.en||b.ar,type,d:b.dar||"",d_en:b.den||"",w:W?W.w.n:"",ll,q:o.q,dyn:1};
     if(b.arw)l.wt=decodeURIComponent(b.arw.split("/wiki/").pop()).replace(/_/g," ");if(b.enw)l.enw=decodeURIComponent(b.enw.split("/wiki/").pop()).replace(/_/g," ");
     if(l.wt&&l.enw)ENW[l.wt]=l.enw;
     const fn=decodeURIComponent(img.split("/").pop());
-    PHOTOS[k]=[{f:img+"?width=1280",t:img+"?width=500",a:EN()?"Wikimedia Commons":"ويكيميديا كومنز",l:EN()?"see file page":"انظر صفحة الملف",p:"https://commons.wikimedia.org/wiki/File:"+encodeURIComponent(fn.replace(/ /g,"_")),r:1}];
+    PHOTOS[k]=[{f:cthumb(fn,960),t:cthumb(fn,330),a:EN()?"Wikimedia Commons":"ويكيميديا كومنز",l:EN()?"see file page":"انظر صفحة الملف",p:"https://commons.wikimedia.org/wiki/File:"+encodeURIComponent(fn.replace(/ /g,"_")),r:1}];
     g.landmarks.push(l);ALL.push({l,gi});nL++;nP++;added++;});
   if(!added)return;setStat();drawPins();if(cur>=0){const sc=$("shBody").scrollTop;renderSheet();$("shBody").scrollTop=sc;}}
 setTimeout(()=>wdLandmarks().catch(()=>{}),900);
@@ -696,21 +710,20 @@ function addSlides(list,start,l){
 /* more photos straight from Wikimedia Commons (shown, not stored) */
 const CM=new Map();
 function commonsFor(l){if(CM.has(l.k))return CM.get(l.k);
-  const pr=(async()=>{const api="https://commons.wikimedia.org/w/api.php?action=query&format=json&origin=*&prop=imageinfo&iiprop=url|size|extmetadata&iiurlwidth=1280&iiextmetadatafilter=Artist|LicenseShortName&";
+  const pr=(async()=>{const api="https://commons.wikimedia.org/w/api.php?action=query&format=json&origin=*&prop=imageinfo&iiprop=url|size|extmetadata&iiurlwidth=960&iiextmetadatafilter=Artist|LicenseShortName&";
     const get=q=>fetch(api+q).then(r=>r.ok?r.json():null).catch(()=>null);const seen=new Set(),out=[];
     (PHOTOS[l.k]||[]).forEach(p=>{const m=decodeURIComponent(p.p||"").match(/File:(.+)$/);if(m)seen.add(m[1].replace(/_/g," ").toLowerCase());});
     const add=j=>{if(!j||!j.query||!j.query.pages)return;Object.values(j.query.pages).sort((a,b)=>(a.index||0)-(b.index||0)).forEach(p=>{const i=p.imageinfo&&p.imageinfo[0],t=p.title.replace(/^File:/,"");
-      if(!i||!/\.(jpe?g|png|webp)$/i.test(t)||i.width<700||i.height<450||seen.has(t.toLowerCase()))return;seen.add(t.toLowerCase());
+      if(!i||!/\.(jpe?g|webp)$/i.test(t)||BAD.test(t)||i.width<800||i.height<500||i.width/i.height>3||seen.has(t.toLowerCase()))return;seen.add(t.toLowerCase());
       const m=i.extmetadata||{},art=((m.Artist&&m.Artist.value)||"").replace(/<[^>]+>/g,"").replace(/\s+/g," ").trim().slice(0,60);
-      const f=i.thumburl||i.url,th=/\/\d+px-/.test(f)?f.replace(/\/\d+px-/,"/500px-"):f;
+      const f=i.thumburl||i.url,th=/\/\d+px-/.test(f)?f.replace(/\/\d+px-/,"/330px-"):f;
       out.push({f,t:th,a:art||"Wikimedia Commons",l:(m.LicenseShortName&&m.LicenseShortName.value)||"",p:i.descriptionurl,r:1});});};
-    let cat=null;
-    if(l.q){const e=await fetch("https://www.wikidata.org/w/api.php?action=wbgetclaims&format=json&origin=*&property=P373&entity="+l.q).then(r=>r.json()).catch(()=>null);
-      const c=e&&e.claims&&e.claims.P373&&e.claims.P373[0];cat=c&&c.mainsnak&&c.mainsnak.datavalue&&c.mainsnak.datavalue.value;
-      add(await get("generator=search&gsrnamespace=6&gsrlimit=12&gsrsearch="+encodeURIComponent("haswbstatement:P180="+l.q)));}
-    if(cat)add(await get("generator=categorymembers&gcmtype=file&gcmlimit=30&gcmtitle="+encodeURIComponent("Category:"+cat)));
-    if(out.length<3&&l.en){const nm=l.en.replace(/\(.*?\)/g,"").split(/&| and /)[0].trim();add(await get("generator=search&gsrnamespace=6&gsrlimit=10&gsrsearch="+encodeURIComponent('intitle:"'+nm+'" Oman')));}
-    return out.slice(0,24);})();
+    if(!l.q)return out;
+    const [dep,e]=await Promise.all([get("generator=search&gsrnamespace=6&gsrlimit=12&gsrsearch="+encodeURIComponent("haswbstatement:P180="+l.q)),
+      fetch("https://www.wikidata.org/w/api.php?action=wbgetclaims&format=json&origin=*&property=P373&entity="+l.q).then(r=>r.json()).catch(()=>null)]);
+    add(dep);const c=e&&e.claims&&e.claims.P373&&e.claims.P373[0],cat=c&&c.mainsnak&&c.mainsnak.datavalue&&c.mainsnak.datavalue.value;
+    if(cat&&out.length<12)add(await get("generator=categorymembers&gcmtype=file&gcmlimit=25&gcmtitle="+encodeURIComponent("Category:"+cat)));
+    return out.slice(0,12);})();
   CM.set(l.k,pr);return pr;}
 function go(n,animate=true){if(!vlist.length)return;vi=Math.max(0,Math.min(vlist.length-1,n));setZoom(1);
   for(let k=vi-1;k<=vi+1;k++){const im=track.children[k]&&track.children[k].querySelector("img");if(im&&!im.getAttribute("src"))im.src=im.dataset.src;}
