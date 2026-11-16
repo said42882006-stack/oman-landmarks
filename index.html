@@ -317,7 +317,7 @@ const gn=g=>EN()?g.en:g.ar, gfull=g=>EN()?g.en+" Governorate":"محافظة "+g.
 const ln=l=>EN()?(l.en||l.ar):l.ar, ld=l=>EN()?(l.d_en||l.d):l.d, tn=k=>EN()?TYPES[k].e:TYPES[k].n;
 const wn=w=>EN()?(w.en||w.n):w.n, wd=w=>EN()?(w.d_en||w.d):w.d;
 const lw=(l,g)=>{if(!EN())return l.w;const W=(g.wil||[]).find(x=>x.n===l.w);return W&&W.en||l.w;};
-const wil=(name,g,full)=>EN()?((full?"Wilayat of ":"")+lw({w:name},g)):"ولاية "+name;
+const wil=(name,g,full)=>!name?"":EN()?((full?"Wilayat of ":"")+lw({w:name},g)):"ولاية "+name;
 const ctN=(n,ar1,ar2,arP,enS,enP)=>EN()?(n+" "+(n===1?enS:enP)):(n===1?ar1:n===2?ar2:n+" "+arP);
 const ic=(k,cls="i")=>'<svg class="'+cls+'" viewBox="0 0 24 24" aria-hidden="true">'+ICONS[k]+'</svg>';
 const $=id=>document.getElementById(id), NS="http://www.w3.org/2000/svg";
@@ -329,7 +329,8 @@ function el(t,a,p){const e=document.createElementNS(NS,t);for(const k in a)e.set
 $("logo").innerHTML=ic("pin");$("sIcon").innerHTML=ic("search");$("hintIcon").innerHTML=ic("pin");
 $("zIn").innerHTML=ic("plus");$("zOut").innerHTML=ic("minus");$("zReset").innerHTML=ic("reset");
 $("shClose").innerHTML=ic("x");$("vClose").innerHTML=ic("x");$("vPrev").innerHTML=ic("prev");$("vNext").innerHTML=ic("next");
-let nL=0,nP=0;const ALL=[];GOVS.forEach((g,gi)=>g.landmarks.forEach(l=>{if(PHOTOS[l.k]){nL++;nP+=PHOTOS[l.k].length;ALL.push({l,gi});}}));
+let nL=0,nP=0;const ALL=[];
+GOVS.forEach((g,gi)=>g.landmarks.forEach(l=>{if(PHOTOS[l.k]){nL++;nP+=PHOTOS[l.k].length;ALL.push({l,gi});}}));
 function setStat(){$("stat").textContent=EN()?("11 governorates • "+nL+" landmarks • "+nP+" photos"):("١١ محافظة • "+nL+" معلماً • "+nP+" صورة");}
 
 /* ---------- map + camera ---------- */
@@ -516,7 +517,7 @@ function renderBody(){
   lms.forEach((l,k)=>{const ph=PHOTOS[l.k],T=TYPES[l.type];
     const b=document.createElement("button");
     if(k===0){b.className="feature";
-      b.innerHTML='<img src="'+ph[0].t+'" alt="'+esc(ln(l))+'"><span class="cnt">'+ic("images")+ph.length+'</span><div class="ov"><div class="eyebrow">'+ic(l.type)+tn(l.type)+' • '+esc(wil(l.w,g))+'</div><h3>'+esc(ln(l))+'</h3><p>'+esc(ld(l))+'</p></div>';
+      b.innerHTML='<img src="'+ph[0].t+'" alt="'+esc(ln(l))+'"><span class="cnt">'+ic("images")+ph.length+'</span><div class="ov"><div class="eyebrow">'+ic(l.type)+tn(l.type)+(l.w?' • '+esc(wil(l.w,g)):'')+'</div><h3>'+esc(ln(l))+'</h3><p>'+esc(ld(l))+'</p></div>';
       body.appendChild(b);if(lms.length>1){const h=document.createElement("div");h.className="sec-title";h.textContent=filter==="all"?tr("others"):tr("more");body.appendChild(h);const gr=document.createElement("div");gr.className="grid";gr.id="grid";body.appendChild(gr);}}
     else{b.className="tile";
       b.innerHTML='<div class="ph"><img loading="lazy" src="'+ph[0].t+'" alt="'+esc(ln(l))+'">'+(ph.length>1?'<span class="cnt">'+ic("images")+ph.length+'</span>':'')+'</div><div class="cap"><b>'+esc(ln(l))+'</b><small style="color:'+T.c+'">'+ic(l.type)+tn(l.type)+'</small><span class="w">'+esc(wil(l.w,g))+'</span></div>';
@@ -553,6 +554,40 @@ function wikiCard(title,parent,before){if(!title)return null;const c=document.cr
     requestAnimationFrame(()=>{const p=c.querySelector("p");if(p.scrollHeight<=p.clientHeight+2)b.style.visibility="hidden";});
   }).catch(()=>c.remove());return c;}
 function wikiAr(t){const L=LANG;LANG="ar";try{return wiki(t);}finally{LANG=L;}}
+/* ---------- many more landmarks, live from Wikidata (SPARQL) ---------- */
+const WDCLS={Q57821:"fort",Q23413:"fort",Q1785071:"fort",Q57831:"fort",Q839954:"arch",Q162875:"arch",Q35509:"cave",Q187971:"nature",Q8502:"nature",Q40080:"nature",Q23442:"nature",Q179049:"nature",Q34038:"nature",Q124714:"nature",Q46831:"nature",Q473972:"nature",Q8514:"nature",Q44782:"port",Q283202:"port",Q32815:"city",Q33506:"city",Q16560:"city",Q510177:"city",Q39715:"city",Q4989906:"city"};
+const WD_TTL=864e5;
+async function wdLandmarks(){let rows=null;
+  try{const c=JSON.parse(localStorage.getItem("om_wdq")||"null");if(c&&Date.now()-c.t<WD_TTL)rows=c.r;}catch(e){}
+  if(!rows){const vals=Object.entries(WDCLS).map(([q,t])=>"(wd:"+q+' "'+t+'")').join(" ");
+    const Q='SELECT ?item ?type ?coord ?img ?ar ?en ?dar ?den ?arw ?enw ?loc WHERE { ?item wdt:P17 wd:Q842; wdt:P625 ?coord; wdt:P18 ?img; wdt:P31/wdt:P279? ?cls. VALUES (?cls ?type) {'+vals+'} '+
+      'OPTIONAL{?item rdfs:label ?ar FILTER(lang(?ar)="ar")} OPTIONAL{?item rdfs:label ?en FILTER(lang(?en)="en")} OPTIONAL{?item schema:description ?dar FILTER(lang(?dar)="ar")} OPTIONAL{?item schema:description ?den FILTER(lang(?den)="en")} '+
+      'OPTIONAL{?arw schema:about ?item; schema:isPartOf <https://ar.wikipedia.org/>} OPTIONAL{?enw schema:about ?item; schema:isPartOf <https://en.wikipedia.org/>} OPTIONAL{?item wdt:P131 ?loc} }';
+    const r=await fetch("https://query.wikidata.org/sparql?format=json&query="+encodeURIComponent(Q),{headers:{Accept:"application/sparql-results+json"}});if(!r.ok)return;
+    const j=await r.json();rows=j.results.bindings.map(b=>{const o={};for(const k in b)o[k]=b[k].value;return o;});
+    try{localStorage.setItem("om_wdq",JSON.stringify({t:Date.now(),r:rows}));}catch(e){}}
+  addWdLandmarks(rows);}
+function addWdLandmarks(rows){const by=new Map(),pri={fort:0,arch:1,cave:2,port:3,nature:4,city:5};
+  rows.forEach(b=>{const q=b.item.split("/").pop();let o=by.get(q);if(!o){o={q,types:new Set(),locs:new Set(),b};by.set(q,o);}o.types.add(b.type);if(b.loc)o.locs.add(b.loc.split("/").pop());["ar","en","dar","den","arw","enw","img","coord"].forEach(k=>{if(b[k]&&!o.b[k])o.b[k]=b[k];});});
+  const known=new Set(),pts=[];GOVS.forEach(g=>g.landmarks.forEach(l=>{if(l.q)known.add(l.q);if(l.ll)pts.push(l.ll);}));
+  const wq=new Map();GOVS.forEach((g,gi)=>(g.wil||[]).forEach(w=>{if(w.q)wq.set(w.q,{gi,w});}));
+  const paths=nodes.map(n=>n.querySelector("path"));let added=0;const per=new Map();
+  [...by.values()].forEach(o=>{const b=o.b;if(known.has(o.q)||!(b.ar||b.en))return;
+    const m=/Point\(([-\d.]+) ([-\d.]+)\)/.exec(b.coord||"");if(!m)return;const ll=[+m[1],+m[2]];
+    if(pts.some(p=>Math.abs(p[0]-ll[0])<.006&&Math.abs(p[1]-ll[1])<.006))return;
+    const [x,y]=geo(...ll);let gi=paths.findIndex(p=>p.isPointInFill(new DOMPoint(x,y)));
+    let W=null;for(const lq of o.locs){if(wq.has(lq)){W=wq.get(lq);break;}}
+    if(gi<0&&W)gi=W.gi;if(gi<0)return;if(W&&W.gi!==gi)W=null;
+    const type=[...o.types].sort((a,c)=>pri[a]-pri[c])[0];const key=gi+type;const n=per.get(key)||0;if(n>=(type==="city"?10:25))return;per.set(key,n+1);
+    const g=GOVS[gi],k="wd_"+o.q,img=b.img.replace(/^http:/,"https:");
+    const l={k,ar:b.ar||b.en,en:b.en||b.ar,type,d:b.dar||"",d_en:b.den||"",w:W?W.w.n:"",ll,q:o.q,dyn:1};
+    if(b.arw)l.wt=decodeURIComponent(b.arw.split("/wiki/").pop()).replace(/_/g," ");if(b.enw)l.enw=decodeURIComponent(b.enw.split("/wiki/").pop()).replace(/_/g," ");
+    if(l.wt&&l.enw)ENW[l.wt]=l.enw;
+    const fn=decodeURIComponent(img.split("/").pop());
+    PHOTOS[k]=[{f:img+"?width=1280",t:img+"?width=500",a:EN()?"Wikimedia Commons":"ويكيميديا كومنز",l:EN()?"see file page":"انظر صفحة الملف",p:"https://commons.wikimedia.org/wiki/File:"+encodeURIComponent(fn.replace(/ /g,"_")),r:1}];
+    g.landmarks.push(l);ALL.push({l,gi});nL++;nP++;added++;});
+  if(!added)return;setStat();drawPins();if(cur>=0){const sc=$("shBody").scrollTop;renderSheet();$("shBody").scrollTop=sc;}}
+setTimeout(()=>wdLandmarks().catch(()=>{}),900);
 /* landmarks without local photos: borrow the article's lead image */
 async function wikiPhotos(){for(const g of GOVS)for(const l of g.landmarks){if(PHOTOS[l.k]||!l.wt)continue;
   try{const w=await wikiAr(l.wt);if(w.orig||w.th){PHOTOS[l.k]=[{f:w.orig||w.th,t:w.th||w.orig,a:tr("wikiimg"),l:tr("seeart"),p:w.url}];if(cur>=0&&GOVS[cur]===g)renderSheet();}}catch(e){}}}
@@ -631,7 +666,7 @@ function openViewer(l,gi,fromImg){
   $("vTitle").textContent=ln(l);$("vSub").textContent=gfull(GOVS[gi])+" • "+tn(l.type);$("vDesc").textContent=ld(l);
   {const F=[];const W=(GOVS[gi].wil||[]).find(x=>x.n===l.w);
     if(l.whs)F.push('<span class="whs">'+ic("landmark")+(EN()?"UNESCO World Heritage Site":"موقع تراث عالمي – يونسكو")+'</span>');
-    F.push('<span>'+ic("pin")+esc(wil(l.w,GOVS[gi],1))+'</span>');
+    if(l.w)F.push('<span>'+ic("pin")+esc(wil(l.w,GOVS[gi],1))+'</span>');if(l.dyn)F.push('<span>'+(EN()?"Added from Wikidata":"مضاف من ويكي بيانات")+'</span>');
     if(l.yr)F.push('<span>'+(EN()?"Since ":"منذ ")+l.yr+'</span>');
     if(l.q)F.push('<a href="https://www.wikidata.org/wiki/'+l.q+'" target="_blank" rel="noopener">'+(EN()?"Wikidata":"ويكي بيانات")+' ↗</a>');
     $("vFacts").innerHTML=F.join("");}
