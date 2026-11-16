@@ -50,18 +50,21 @@ svg#map.dragging{cursor:grabbing}
 .gov:hover path,.gov:focus-visible path{fill-opacity:.5;stroke-width:2.4}
 .gov.sel path{fill-opacity:.42;stroke-width:3.5}
 .gov.dim path{fill-opacity:.22}
-.pl text{font-family:var(--font);font-weight:700;fill:#1d1d1f;paint-order:stroke;stroke:rgba(255,255,255,.92);stroke-linejoin:round;pointer-events:none;letter-spacing:.005em}
+.pl text{font-family:var(--font);font-weight:700;fill:#1d1d1f;paint-order:stroke;stroke:rgba(255,255,255,.92);stroke-linejoin:round;pointer-events:none}
 .pl.cap text{font-weight:800}
+[dir=ltr] .pl.sea text{letter-spacing:.06em}[dir=ltr] .pl.cty text{letter-spacing:.08em}
+#map text{font-variant-ligatures:normal;text-rendering:geometricPrecision}
+html[lang=ar] .brand h1,html[lang=ar] .sh-head h2{letter-spacing:0}
 .pl circle{fill:#1d1d1f;stroke:#fff;pointer-events:none}.pl.cap circle{fill:#fff;stroke:#1d1d1f}
 .pl{transition:opacity .28s ease}.pl.hide{opacity:0}
 .pin{stroke:#fff;cursor:pointer;transition:opacity .25s;filter:drop-shadow(0 1px 1.5px rgba(0,0,0,.35))}.pin.hide{opacity:0;pointer-events:none}.pin:hover{stroke:#1d1d1f}
 .v-facts{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:8px auto 0;max-width:680px}.v-facts:empty{display:none}
 .v-facts span,.v-facts a{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.14);color:#fff;text-decoration:none}
 .v-facts .whs{background:rgba(10,132,255,.55)}
-.pl.sea text{fill:#2b5d9b;font-weight:600;font-style:italic;stroke:rgba(255,255,255,.4);letter-spacing:.06em;opacity:.9}
-.pl.cty text{fill:#6e6e73;font-weight:700;stroke:rgba(255,255,255,.65);letter-spacing:.08em}
+.pl.sea text{fill:#2b5d9b;font-weight:600;font-style:italic;stroke:rgba(255,255,255,.4);opacity:.9}
+.pl.cty text{fill:#6e6e73;font-weight:700;stroke:rgba(255,255,255,.65)}
 
-.lbl{font-family:var(--font);font-weight:800;fill:#fff;text-anchor:middle;dominant-baseline:middle;pointer-events:none;paint-order:stroke;stroke:rgba(20,24,30,.5);stroke-linejoin:round;letter-spacing:.01em;transition:opacity .28s ease}
+.lbl{font-family:var(--font);font-weight:800;fill:#fff;text-anchor:middle;dominant-baseline:middle;pointer-events:none;paint-order:stroke;stroke:rgba(20,24,30,.5);stroke-linejoin:round;transition:opacity .28s ease}
 .lbl.hide{opacity:0}
 
 /* ---------- top bar ---------- */
