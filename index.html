@@ -518,10 +518,10 @@ function renderBody(){
   lms.forEach((l,k)=>{const ph=PHOTOS[l.k],T=TYPES[l.type];
     const b=document.createElement("button");
     if(k===0){b.className="feature";
-      b.innerHTML='<img decoding="async" src="'+ph[0].t+'" alt="'+esc(ln(l))+'"><span class="cnt">'+ic("images")+ph.length+'</span><div class="ov"><div class="eyebrow">'+ic(l.type)+tn(l.type)+(l.w?' • '+esc(wil(l.w,g)):'')+'</div><h3>'+esc(ln(l))+'</h3><p>'+esc(ld(l))+'</p></div>';
+      b.innerHTML='<img decoding="async" src="'+ph[0].t+'" alt="'+esc(ln(l))+'"><span class="cnt">'+ic("images")+Math.min(ph.length,MAXPH)+'</span><div class="ov"><div class="eyebrow">'+ic(l.type)+tn(l.type)+(l.w?' • '+esc(wil(l.w,g)):'')+'</div><h3>'+esc(ln(l))+'</h3><p>'+esc(ld(l))+'</p></div>';
       body.appendChild(b);if(lms.length>1){const h=document.createElement("div");h.className="sec-title";h.textContent=filter==="all"?tr("others"):tr("more");body.appendChild(h);const gr=document.createElement("div");gr.className="grid";gr.id="grid";body.appendChild(gr);}}
     else{b.className="tile";
-      b.innerHTML='<div class="ph"><img loading="lazy" src="'+ph[0].t+'" alt="'+esc(ln(l))+'">'+(ph.length>1?'<span class="cnt">'+ic("images")+ph.length+'</span>':'')+'</div><div class="cap"><b>'+esc(ln(l))+'</b><small style="color:'+T.c+'">'+ic(l.type)+tn(l.type)+'</small><span class="w">'+esc(wil(l.w,g))+'</span></div>';
+      b.innerHTML='<div class="ph"><img loading="lazy" src="'+ph[0].t+'" alt="'+esc(ln(l))+'">'+(ph.length>1?'<span class="cnt">'+ic("images")+Math.min(ph.length,MAXPH)+'</span>':'')+'</div><div class="cap"><b>'+esc(ln(l))+'</b><small style="color:'+T.c+'">'+ic(l.type)+tn(l.type)+'</small><span class="w">'+esc(wil(l.w,g))+'</span></div>';
       $("grid").appendChild(b);}
     b.onclick=()=>openViewer(l,cur,b.querySelector("img"));});
   if(filter==="all"&&g.wil){const h=document.createElement("div");h.className="sec-title";h.textContent=(EN()?"Wilayats (":"الولايات (")+g.wil.length+")";body.appendChild(h);
@@ -676,7 +676,7 @@ document.addEventListener("keydown",e=>{if((e.key==="k"&&(e.metaKey||e.ctrlKey))
 /* ---------- viewer (Photos style) ---------- */
 const V=$("viewer"),track=$("track");let vl=null,vlist=[],vi=0,zoom=1;
 function openViewer(l,gi,fromImg){
-  vl=l;vlist=PHOTOS[l.k].slice();vi=0;zoom=1;
+  vl=l;vlist=PHOTOS[l.k].slice(0,MAXPH);vi=0;zoom=1;
   $("vTitle").textContent=ln(l);$("vSub").textContent=gfull(GOVS[gi])+" • "+tn(l.type);$("vDesc").textContent=ld(l);
   {const F=[];const W=(GOVS[gi].wil||[]).find(x=>x.n===l.w);
     if(l.whs)F.push('<span class="whs">'+ic("landmark")+(EN()?"UNESCO World Heritage Site":"موقع تراث عالمي – يونسكو")+'</span>');
@@ -688,7 +688,7 @@ function openViewer(l,gi,fromImg){
   if(l.wt){vb.innerHTML=ic("book")+tr("readwiki");wiki(l.wt).then(w=>{if(vl!==l)return;vb.hidden=false;
     vb.onclick=()=>{vp.hidden=!vp.hidden;if(!vp.innerHTML)vp.innerHTML=esc(w.x)+' <a href="'+w.url+'" target="_blank" rel="noopener">'+tr("full")+'</a>';};}).catch(()=>{});}
   track.innerHTML="";$("strip").innerHTML="";addSlides(vlist,0,l);
-  commonsFor(l).then(extra=>{if(vl!==l||!extra.length)return;const n0=vlist.length;vlist.push(...extra);addSlides(extra,n0,l);
+  if(vlist.length<MAXPH)commonsFor(l).then(extra=>{extra=extra.slice(0,MAXPH-vlist.length);if(vl!==l||!extra.length)return;const n0=vlist.length;vlist.push(...extra);addSlides(extra,n0,l);
     const f=$("vFacts");if(f&&!f.querySelector(".cm"))f.insertAdjacentHTML("beforeend",'<span class="cm">'+ic("images")+"+"+extra.length+(EN()?" from Wikimedia Commons":" صورة من ويكيميديا كومنز")+'</span>');go(vi,false);}).catch(()=>{});
   V.classList.add("open");V.classList.remove("chrome-off","ready");go(0,false);
   const target=track.children[0].querySelector("img");
@@ -708,22 +708,30 @@ function addSlides(list,start,l){
   $("strip").style.display=vlist.length>1?"flex":"none";$("vPrev").style.display=$("vNext").style.display=vlist.length>1?"grid":"none";
   if(start===0){const im=track.children[0]&&track.children[0].querySelector("img");if(im)im.src=im.dataset.src;}}
 /* more photos straight from Wikimedia Commons (shown, not stored) */
-const CM=new Map();
+const CM=new Map(),MAXPH=5;
 function commonsFor(l){if(CM.has(l.k))return CM.get(l.k);
-  const pr=(async()=>{const api="https://commons.wikimedia.org/w/api.php?action=query&format=json&origin=*&prop=imageinfo&iiprop=url|size|extmetadata&iiurlwidth=960&iiextmetadatafilter=Artist|LicenseShortName&";
-    const get=q=>fetch(api+q).then(r=>r.ok?r.json():null).catch(()=>null);const seen=new Set(),out=[];
+  const pr=(async()=>{const api="https://commons.wikimedia.org/w/api.php?action=query&format=json&origin=*&prop=imageinfo&iiprop=url|size|extmetadata&iiurlwidth=960&iiextmetadatafilter=Artist|LicenseShortName|Assessments|ImageDescription&";
+    const get=q=>fetch(api+q).then(r=>r.ok?r.json():null).catch(()=>null);const seen=new Set(),cand=[];
     (PHOTOS[l.k]||[]).forEach(p=>{const m=decodeURIComponent(p.p||"").match(/File:(.+)$/);if(m)seen.add(m[1].replace(/_/g," ").toLowerCase());});
-    const add=j=>{if(!j||!j.query||!j.query.pages)return;Object.values(j.query.pages).sort((a,b)=>(a.index||0)-(b.index||0)).forEach(p=>{const i=p.imageinfo&&p.imageinfo[0],t=p.title.replace(/^File:/,"");
-      if(!i||!/\.(jpe?g|webp)$/i.test(t)||BAD.test(t)||i.width<800||i.height<500||i.width/i.height>3||seen.has(t.toLowerCase()))return;seen.add(t.toLowerCase());
+    const words=((l.en||"")+" "+(l.ar||"")).toLowerCase().replace(/\(.*?\)/g," ").split(/[^\p{L}\p{N}]+/u).filter(w=>w.length>3&&!/^(oman|wadi|fort|castle|the|and|قلعة|حصن|ولاية|وادي)$/.test(w));
+    const add=(j,src)=>{if(!j||!j.query||!j.query.pages)return;Object.values(j.query.pages).forEach(p=>{const i=p.imageinfo&&p.imageinfo[0],t=p.title.replace(/^File:/,"");
+      if(!i||!/\.(jpe?g|webp)$/i.test(t)||BAD.test(t)||i.width<1000||i.height<600||i.width/i.height>2.6||i.height/i.width>1.4||seen.has(t.toLowerCase()))return;seen.add(t.toLowerCase());
       const m=i.extmetadata||{},art=((m.Artist&&m.Artist.value)||"").replace(/<[^>]+>/g,"").replace(/\s+/g," ").trim().slice(0,60);
+      const as=((m.Assessments&&m.Assessments.value)||"").toLowerCase(),tl=t.toLowerCase(),ds=((m.ImageDescription&&m.ImageDescription.value)||"").replace(/<[^>]+>/g," ").toLowerCase();
+      let sc=src==="dep"?40:20;                                   // tagged as depicting this landmark beats category membership
+      if(/featured|poty/.test(as))sc+=45;else if(/quality/.test(as))sc+=30;else if(/valued/.test(as))sc+=20;  // Commons' own quality reviews
+      sc+=Math.min(15,(i.width*i.height)/1e6*2);                     // resolution
+      const ar=i.width/i.height;if(ar>=1.25&&ar<=1.9)sc+=8;else if(ar<1)sc-=6;   // prefer landscape views of the whole site
+      if(words.some(w=>tl.includes(w)||ds.includes(w)))sc+=12;      // file name / caption mentions the landmark
+      if(/(interior|inside|detail|door|ceiling|sign|plaque|inscription|window|close-?up|exhibit|selfie|people|portrait|panorama|night)/.test(tl))sc-=14;
       const f=i.thumburl||i.url,th=/\/\d+px-/.test(f)?f.replace(/\/\d+px-/,"/330px-"):f;
-      out.push({f,t:th,a:art||"Wikimedia Commons",l:(m.LicenseShortName&&m.LicenseShortName.value)||"",p:i.descriptionurl,r:1});});};
-    if(!l.q)return out;
-    const [dep,e]=await Promise.all([get("generator=search&gsrnamespace=6&gsrlimit=12&gsrsearch="+encodeURIComponent("haswbstatement:P180="+l.q)),
+      cand.push({sc,ph:{f,t:th,a:art||"Wikimedia Commons",l:(m.LicenseShortName&&m.LicenseShortName.value)||"",p:i.descriptionurl,r:1}});});};
+    if(!l.q)return [];
+    const [dep,e]=await Promise.all([get("generator=search&gsrnamespace=6&gsrlimit=25&gsrsearch="+encodeURIComponent("haswbstatement:P180="+l.q)),
       fetch("https://www.wikidata.org/w/api.php?action=wbgetclaims&format=json&origin=*&property=P373&entity="+l.q).then(r=>r.json()).catch(()=>null)]);
-    add(dep);const c=e&&e.claims&&e.claims.P373&&e.claims.P373[0],cat=c&&c.mainsnak&&c.mainsnak.datavalue&&c.mainsnak.datavalue.value;
-    if(cat&&out.length<12)add(await get("generator=categorymembers&gcmtype=file&gcmlimit=25&gcmtitle="+encodeURIComponent("Category:"+cat)));
-    return out.slice(0,12);})();
+    add(dep,"dep");const c=e&&e.claims&&e.claims.P373&&e.claims.P373[0],cat=c&&c.mainsnak&&c.mainsnak.datavalue&&c.mainsnak.datavalue.value;
+    if(cat)add(await get("generator=categorymembers&gcmtype=file&gcmlimit=50&gcmtitle="+encodeURIComponent("Category:"+cat)),"cat");
+    return cand.sort((a,b)=>b.sc-a.sc).map(x=>x.ph);})();
   CM.set(l.k,pr);return pr;}
 function go(n,animate=true){if(!vlist.length)return;vi=Math.max(0,Math.min(vlist.length-1,n));setZoom(1);
   for(let k=vi-1;k<=vi+1;k++){const im=track.children[k]&&track.children[k].querySelector("img");if(im&&!im.getAttribute("src"))im.src=im.dataset.src;}
