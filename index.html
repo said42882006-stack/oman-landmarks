@@ -764,13 +764,13 @@ const V=$("viewer"),track=$("track");let vl=null,vlist=[],vi=0,zoom=1;
 
 /* ---------- then & now (historic photos from Wikimedia Commons, shown not stored) ---------- */
 const HIST={
- msq_jalali:[{n:"Oman 1973-74 (557108313).jpg",w:1200,y:"1973",a:"Brian Harrington Spier",l:"CC BY-SA 2.0",c:"قلعة الجلالي على صخرتها عند مدخل ميناء مسقط، عام ١٩٧٣",c_en:"Al Jalali Fort on its rock at the mouth of Muscat harbour, 1973"},
-   {n:"Muscat harbor.jpg",w:1200,y:"1903",a:"Hilprecht, Benzinger, Hommel et al.",l:"Public domain",c:"ميناء مسقط وسفنه الشراعية في كتاب نُشر عام ١٩٠٣",c_en:"Muscat harbour and its dhows, from a book published in 1903"}],
+ msq_jalali:[{n:"Oman 1973-74 (557108313).jpg",w:960,y:"1973",a:"Brian Harrington Spier",l:"CC BY-SA 2.0",c:"قلعة الجلالي على صخرتها عند مدخل ميناء مسقط، عام ١٩٧٣",c_en:"Al Jalali Fort on its rock at the mouth of Muscat harbour, 1973"},
+   {n:"Muscat harbor.jpg",w:960,y:"1903",a:"Hilprecht, Benzinger, Hommel et al.",l:"Public domain",c:"ميناء مسقط وسفنه الشراعية في كتاب نُشر عام ١٩٠٣",c_en:"Muscat harbour and its dhows, from a book published in 1903"}],
  msq_alam:[{n:"No. 3. Muskat from the harbour RMG PW4795.jpg",w:960,y:"1813",a:"John Heaviside Clark, after Richard Temple",l:"Public domain",c:"مسقط القديمة كما تبدو من الميناء – لوحة محفورة عام ١٨١٣",c_en:"Old Muscat seen from the harbour – engraving, 1813"}],
  msq_mutrahfort:[{n:"No. 4. A View of Mutra from the east RMG PW4796.jpg",w:960,y:"1813",a:"John Heaviside Clark, after Richard Temple",l:"Public domain",c:"مطرح من جهة الشرق – لوحة محفورة عام ١٨١٣",c_en:"Mutrah from the east – engraving, 1813"}],
- nb_sohar:[{n:"Oman 1973 - 74 (680511491).jpg",w:1200,y:"1973",a:"Brian Harrington Spier",l:"CC BY-SA 2.0",c:"الطريق الترابي إلى صحار بين النخيل، وتظهر القلعة في الوسط، عام ١٩٧٣",c_en:"The dirt road into Sohar through the palms, the fort just visible in the centre, 1973"}],
- sb_rustaq:[{n:"Oman 1973 - 74 (620866923).jpg",w:1200,y:"1973",a:"Brian Harrington Spier",l:"CC BY-SA 2.0",c:"سوق الرستاق القديم عام ١٩٧٣",c_en:"The old souq of Rustaq, 1973"}],
- df_mirbat:[{n:"Over Mirbat in the early Seventies.jpg",w:1200,y:"1972",a:"Brian Harrington Spier",l:"CC BY-SA 2.0",c:"مرباط من الجو أوائل السبعينيات (١٩٧٢)",c_en:"Mirbat from the air in the early 1970s (1972)"}]
+ nb_sohar:[{n:"Oman 1973 - 74 (680511491).jpg",w:960,y:"1973",a:"Brian Harrington Spier",l:"CC BY-SA 2.0",c:"الطريق الترابي إلى صحار بين النخيل، وتظهر القلعة في الوسط، عام ١٩٧٣",c_en:"The dirt road into Sohar through the palms, the fort just visible in the centre, 1973"}],
+ sb_rustaq:[{n:"Oman 1973 - 74 (620866923).jpg",w:960,y:"1973",a:"Brian Harrington Spier",l:"CC BY-SA 2.0",c:"سوق الرستاق القديم عام ١٩٧٣",c_en:"The old souq of Rustaq, 1973"}],
+ df_mirbat:[{n:"Over Mirbat in the early Seventies.jpg",w:960,y:"1972",a:"Brian Harrington Spier",l:"CC BY-SA 2.0",c:"مرباط من الجو أوائل السبعينيات (١٩٧٢)",c_en:"Mirbat from the air in the early 1970s (1972)"}]
 };
 const AR_DIG=x=>EN()?x:String(x).replace(/\d/g,d=>"٠١٢٣٤٥٦٧٨٩"[d]);
 let baL=null,baI=0,baPos=.5;
