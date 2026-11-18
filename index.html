@@ -37,7 +37,7 @@ html,body{height:100%;margin:0}
 body{font-family:var(--font);color:var(--label);background:var(--bg);overflow:hidden;-webkit-font-smoothing:antialiased;font-feature-settings:"kern"}
 button{font:inherit;color:inherit}
 svg.i{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
-.glass{background:var(--glass);-webkit-backdrop-filter:saturate(180%) blur(24px);backdrop-filter:saturate(180%) blur(24px);border:.5px solid var(--glass-border);box-shadow:var(--shadow)}
+.glass{background:var(--glass);-webkit-backdrop-filter:saturate(160%) blur(14px);backdrop-filter:saturate(160%) blur(14px);border:.5px solid var(--glass-border);box-shadow:var(--shadow)}
 
 /* ---------- map ---------- */
 #stage{position:fixed;inset:0;background-color:#2a2240;background-image:linear-gradient(180deg,rgba(42,43,71,0) 0%,rgba(42,43,71,.55) 38%,rgba(42,43,71,.72) 62%,rgba(42,43,71,.12) 100%),radial-gradient(70% 50% at 70% 30%,rgba(212,163,115,.16),transparent 70%),repeating-linear-gradient(0deg,rgba(0,0,0,.17) 0 1px,transparent 1px 5px),linear-gradient(90deg,#3c192a 0.00% 17.50%,#6c213e 17.50% 36.88%,#a77558 36.88% 38.75%,#454681 38.75% 48.12%,#a76c5a 48.12% 50.62%,#bb9da9 50.62% 53.12%,#5e2f4b 53.12% 54.38%,#ead2dd 54.38% 56.25%,#a56f5b 56.25% 58.12%,#454681 58.12% 68.12%,#9a6560 68.12% 70.62%,#6c213e 70.62% 89.38%,#3a1b2f 89.38% 100.00%);background-size:100% 100%,100% 100%,100% 100%,var(--rw,420px) 100%;background-position:center;background-repeat:no-repeat,no-repeat,repeat,repeat-x}@media (max-width:640px){#stage{--rw:300px}}
@@ -45,7 +45,7 @@ svg#map{width:100%;height:100%;display:block;touch-action:none;user-select:none;
 svg#map.dragging{cursor:grabbing}
 .gov{cursor:pointer;outline:none}
 #borders .bd{fill:none;stroke:rgba(25,30,40,.28);stroke-width:2.6;stroke-linejoin:round;vector-effect:non-scaling-stroke;pointer-events:none}
-#borders{mix-blend-mode:multiply}
+#borders{}
 .gov path{fill-opacity:.32;stroke:#fff;stroke-width:1.4;stroke-linejoin:round;vector-effect:non-scaling-stroke;transition:fill-opacity .35s var(--ease),stroke-width .35s var(--ease)}
 .gov:hover path,.gov:focus-visible path{fill-opacity:.5;stroke-width:2.4}
 .gov.sel path{fill-opacity:.42;stroke-width:3.5}
@@ -57,7 +57,7 @@ svg#map.dragging{cursor:grabbing}
 html[lang=ar] .brand h1,html[lang=ar] .sh-head h2{letter-spacing:0}
 .pl circle{fill:#1d1d1f;stroke:#fff;pointer-events:none}.pl.cap circle{fill:#fff;stroke:#1d1d1f}
 .pl{transition:opacity .28s ease}.pl.hide{opacity:0}
-.pin{stroke:#fff;cursor:pointer;transition:opacity .25s;filter:drop-shadow(0 1px 1.5px rgba(0,0,0,.35))}.pin.hide{opacity:0;pointer-events:none}.pin:hover{stroke:#1d1d1f}
+.pin{stroke:#fff;cursor:pointer;transition:opacity .25s}.pin.hide{opacity:0;pointer-events:none}.pin:hover{stroke:#1d1d1f}
 .v-facts{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:8px auto 0;max-width:680px}.v-facts:empty{display:none}
 .v-facts span,.v-facts a{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.14);color:#fff;text-decoration:none}
 .v-facts .whs{background:rgba(10,132,255,.55)}.v-facts .cm{background:rgba(52,168,83,.5)}
@@ -190,7 +190,7 @@ body{--top:calc(var(--safe-t) + var(--nd))}body.nd-on{--nd:72px}
 .hint.hide{opacity:0;transform:translate(-50%,10px);pointer-events:none}
 
 /* ---------- sheet ---------- */
-.sheet{position:fixed;z-index:25;display:flex;flex-direction:column;overflow:hidden;background:var(--glass-strong);-webkit-backdrop-filter:saturate(180%) blur(30px);backdrop-filter:saturate(180%) blur(30px);border:.5px solid var(--glass-border);box-shadow:var(--shadow)}
+.sheet{position:fixed;z-index:25;display:flex;flex-direction:column;overflow:hidden;background:var(--glass-strong);-webkit-backdrop-filter:saturate(160%) blur(16px);backdrop-filter:saturate(160%) blur(16px);border:.5px solid var(--glass-border);box-shadow:var(--shadow)}
 .grabber{display:none}
 .sh-head{flex:none;padding:18px 20px 10px;display:flex;align-items:flex-start;gap:12px}
 .sh-head .dot{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;color:#fff;font-size:22px;flex:none;box-shadow:inset 0 0 0 .5px rgba(255,255,255,.35)}
@@ -358,7 +358,7 @@ body{--top:calc(var(--safe-t) + var(--nd))}body.nd-on{--nd:72px}
     <defs><linearGradient id="fh" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#000"/><stop offset=".05" stop-color="#fff"/><stop offset=".95" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient>
     <linearGradient id="fv" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#000"/><stop offset=".04" stop-color="#fff"/><stop offset=".96" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient>
     <mask id="mh" maskUnits="userSpaceOnUse" x="0" y="0" width="810" height="1110"><rect width="810" height="1110" fill="url(#fh)"/></mask><mask id="mv" maskUnits="userSpaceOnUse" x="0" y="0" width="810" height="1110"><rect width="810" height="1110" fill="url(#fv)"/></mask><mask id="landM" maskUnits="userSpaceOnUse" x="0" y="0" width="810" height="1110"><image href="img/land_mask.png" x="0" y="0" width="810" height="1110" preserveAspectRatio="none"/></mask></defs>
-    <g mask="url(#mv)"><g mask="url(#landM)" opacity=".42"><image id="bg" href="img/topo_lo.jpg" x="0" y="0" width="810" height="1110" preserveAspectRatio="none" mask="url(#mh)"/></g><g mask="url(#landM)"><image id="bg2" href="img/topo_lo.jpg" x="0" y="0" width="810" height="1110" preserveAspectRatio="none" clip-path="url(#omanC)"/></g></g>
+    <image id="bg" href="img/topo_lo.webp" x="0" y="0" width="810" height="1110" preserveAspectRatio="none"/>
     <g id="borders" aria-hidden="true"></g>
     <g id="govs"></g>
     <g id="pins"></g>
@@ -472,7 +472,7 @@ SHAPES.forEach((sh,i)=>{
   const g=GOVS[i];
   const n=el("g",{class:"gov",tabindex:"0",role:"button","aria-label":gfull(g)},$("govs"));
   el("path",{d:sh.d,fill:g.color},n);
-  n.addEventListener("click",e=>{if(moved)return;e.stopPropagation();select(i);});
+  n.addEventListener("click",e=>{if(moved)return;e.stopPropagation();if(cur!==i)select(i);});
   n.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();select(i);}});
   nodes.push(n);el("path",{d:sh.d,class:"bd"},$("borders"));
   const [x,y,s]=g.label;const t=el("text",{class:"lbl",x,y},$("labels"));t.textContent=gn(g);t.dataset.s=s;lbls.push(t);
@@ -493,7 +493,9 @@ function maxW(){return Math.max(LIM.maxW,fitBox(FULL,.02).w*1.25);}
 function clampV(v){let w=Math.max(LIM.minW,Math.min(maxW(),v.w)),h=v.h*w/v.w;let cx=v.x+v.w/2,cy=v.y+v.h/2;
   cx=Math.max(-60,Math.min(870,cx));cy=Math.max(-40,Math.min(1150,cy));return{x:cx-w/2,y:cy-h/2,w,h};}
 let dcW=0,dcTimer=0;
+let lastScaleW=0;
 function setVB(v,force){vb=v;svg.setAttribute("viewBox",v.x+" "+v.y+" "+v.w+" "+v.h);
+  if(!force&&v.w===lastScaleW)return;lastScaleW=v.w;
   const u=v.w/SW(),mob=isMobile();
   lbls.forEach((t,k)=>{const base=+t.dataset.s,sel=k===cur;
     const px=sel?Math.min(30,Math.max(18,base*1.05)):Math.max(mob?11:12,Math.min(mob?20:24,base*(v.w<760?.95:(mob?.6:.74))));
@@ -545,13 +547,13 @@ function zoomAt(f,cx,cy){const r=svg.getBoundingClientRect();cx??=r.width/2;cy??
   const base=zT||vb;const px=base.x+cx/r.width*base.w,py=base.y+cy/r.height*base.h;
   const w=Math.max(LIM.minW,Math.min(maxW(),base.w/f)),h=w*base.h/base.w;zT=clampV({x:px-cx/r.width*w,y:py-cy/r.height*h,w,h});
   if(!zRaf)zRaf=requestAnimationFrame(zStep);}
-function zStep(){const a=.24;const v={x:vb.x+(zT.x-vb.x)*a,y:vb.y+(zT.y-vb.y)*a,w:vb.w+(zT.w-vb.w)*a,h:vb.h+(zT.h-vb.h)*a};
+function zStep(){const a=.3;const v={x:vb.x+(zT.x-vb.x)*a,y:vb.y+(zT.y-vb.y)*a,w:vb.w+(zT.w-vb.w)*a,h:vb.h+(zT.h-vb.h)*a};
   if(Math.abs(v.w-zT.w)<zT.w*.002&&Math.abs(v.x-zT.x)<zT.w*.001){setVB(zT);zT=null;zRaf=0;declutter();return;}setVB(v);zRaf=requestAnimationFrame(zStep);}
 function zoomBy(f,cx,cy){zoomAt(f,cx,cy);}
 $("zIn").onclick=()=>zoomBy(1.6);$("zOut").onclick=()=>zoomBy(1/1.6);
 $("zReset").onclick=()=>cur>=0?select(cur,true):home();
 /* pan (with inertia), pinch, wheel, double-tap */
-let moved=false,ptrs=new Map(),last=null,pinch0=null,vel=[],pend=null,pRaf=0,lastTap=0;
+let moved=false,ptrs=new Map(),last=null,pinch0=null,vel=[],pend=null,pRaf=0,lastTap=0,lastTapP=null;
 const flushPan=()=>{pRaf=0;if(pend){setVB(clampV(pend));pend=null;}};
 svg.addEventListener("pointerdown",e=>{ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});moved=false;last={x:e.clientX,y:e.clientY,t:performance.now()};vel=[];stopAll();
   if(ptrs.size===2){const [a,b]=[...ptrs.values()];pinch0={d:Math.hypot(a.x-b.x,a.y-b.y),vb:{...vb},c:[(a.x+b.x)/2,(a.y+b.y)/2]};}});
@@ -562,7 +564,7 @@ svg.addEventListener("pointermove",e=>{if(!ptrs.has(e.pointerId))return;ptrs.set
     pend={x:px-cx/r.width*w,y:py-cy/r.height*h,w,h};moved=true;if(!pRaf)pRaf=requestAnimationFrame(flushPan);return;}
   if(ptrs.size>1)return;
   const dx=e.clientX-last.x,dy=e.clientY-last.y;
-  if(!moved&&Math.hypot(e.clientX-(last.sx??last.x),e.clientY-(last.sy??last.y))<5){last.sx??=last.x;last.sy??=last.y;return;}
+  if(!moved&&Math.hypot(e.clientX-(last.sx??last.x),e.clientY-(last.sy??last.y))<(e.pointerType==="mouse"?3:6)){last.sx??=last.x;last.sy??=last.y;return;}
   if(!moved){try{svg.setPointerCapture(e.pointerId)}catch(_){}moved=true;svg.classList.add("dragging");}
   const now=performance.now();vel.push({dx,dy,dt:now-last.t,t:now});if(vel.length>6)vel.shift();
   const base=pend||vb;pend={...base,x:base.x-dx/r.width*base.w,y:base.y-dy/r.height*base.h};last={x:e.clientX,y:e.clientY,t:now};if(!pRaf)pRaf=requestAnimationFrame(flushPan);});
@@ -574,8 +576,9 @@ const endPtr=e=>{const wasPinch=ptrs.size>=2;ptrs.delete(e.pointerId);if(ptrs.si
           setVB(clampV({...vb,x:vb.x-vx*dt/r.width*vb.w,y:vb.y-vy*dt/r.height*vb.h}));inRaf=requestAnimationFrame(glide);};
         if(Math.hypot(vx,vy)>.15)inRaf=requestAnimationFrame(glide);}}
     if(moved&&wasPinch)declutter();
+    if(!moved&&!wasPinch&&e.pointerType!=="mouse"&&cur>=0&&e.target.closest(".gov")===nodes[cur]){const now=performance.now();if(now-lastTap<300&&Math.hypot(e.clientX-(lastTapP?.x??0),e.clientY-(lastTapP?.y??0))<30){const r=svg.getBoundingClientRect();zoomAt(2,e.clientX-r.left,e.clientY-r.top);lastTap=0;}else{lastTap=now;lastTapP={x:e.clientX,y:e.clientY};}}
     setTimeout(()=>moved=false,0);}};
-svg.addEventListener("pointerup",endPtr);svg.addEventListener("pointercancel",endPtr);
+svg.addEventListener("pointerup",endPtr);svg.addEventListener("pointerleave",e=>{if(e.pointerType==="mouse")endPtr(e);});svg.addEventListener("pointercancel",endPtr);
 svg.addEventListener("wheel",e=>{e.preventDefault();const r=svg.getBoundingClientRect();let d=e.deltaY*(e.deltaMode===1?16:e.deltaMode===2?400:1);
   if(!e.ctrlKey&&Math.abs(e.deltaX)>Math.abs(e.deltaY)*1.2&&e.deltaMode===0){stopAll();setVB(clampV({...vb,x:vb.x+e.deltaX/r.width*vb.w,y:vb.y+e.deltaY/r.height*vb.h}));return;}
   const f=Math.exp(-d*(e.ctrlKey?.012:.0028));zoomAt(f,e.clientX-r.left,e.clientY-r.top);},{passive:false});
@@ -949,7 +952,7 @@ $("langBtn").onclick=()=>{LANG=EN()?"ar":"en";try{localStorage.setItem("lang",LA
 /* init */
 applyLang();setVB(fitBox(FULL,.02));drawPlaces();drawPins();
 {let touched=false;["pointerdown","wheel"].forEach(ev=>svg.addEventListener(ev,()=>touched=true,{passive:true}));const refit=()=>{if(!touched&&cur<0)setVB(fitBox(FULL,.02),true);};addEventListener("load",refit);setTimeout(refit,400);setTimeout(refit,1500);if(window.visualViewport)visualViewport.addEventListener("resize",refit);}
-{const hd=new Image();hd.onload=()=>{$("bg").setAttribute("href","img/topo_hd.jpg");$("bg2").setAttribute("href","img/topo_hd.jpg");};hd.src="img/topo_hd.jpg";}
+{const hd=new Image();hd.onload=()=>{(hd.decode?hd.decode():Promise.resolve()).then(()=>$("bg").setAttribute("href","img/topo_hd.webp"));};hd.src="img/topo_hd.webp";}
 </script>
 </body>
 </html>
