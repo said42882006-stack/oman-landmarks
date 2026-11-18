@@ -810,7 +810,7 @@ function baShow(i){const h=HIST[baL.k][i];baI=i;const B=$("ba");
   B.querySelectorAll(".ba-years button").forEach((b,k)=>b.classList.toggle("on",k===i));}
 function openBA(l){baL=l;const B=$("ba"),H=HIST[l.k],now=PHOTOS[l.k][0];
   B.querySelector(".ba-now").src=now.f;B.querySelector(".ba-title").textContent=ln(l);
-  B.querySelector(".ba-years").innerHTML=H.length>1?H.map((h,k)=>'<button>'+AR_DIG(h.y)+'</button>').join(""):"";
+  B.querySelector(".ba-years").innerHTML=H.length>1?H.map((h,k)=>{const dup=H.filter(x=>x.y===h.y).length>1,n=H.slice(0,k+1).filter(x=>x.y===h.y).length;return '<button>'+AR_DIG(h.y)+(dup?' · '+AR_DIG(n):'')+'</button>';}).join(""):"";
   B.querySelectorAll(".ba-years button").forEach((b,k)=>b.onclick=()=>baShow(k));
   baShow(0);B.hidden=false;requestAnimationFrame(()=>B.classList.add("on"));
   /* hint: sweep the divider once */
