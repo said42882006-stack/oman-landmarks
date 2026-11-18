@@ -119,6 +119,32 @@ body{--top:calc(var(--safe-t) + var(--nd))}body.nd-on{--nd:72px}
 @keyframes kb{from{transform:scale(1)}to{transform:scale(1.07) translate(-1%,-1%)}}
 @media (prefers-reduced-motion:reduce){.feature img{animation:none}}
 
+
+/* ---------- then & now ---------- */
+.ba{position:fixed;inset:0;z-index:80;background:rgba(10,12,16,.82);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);display:grid;place-items:center;padding:16px;opacity:0;transition:opacity .25s}
+.ba.on{opacity:1}.ba[hidden]{display:none}
+.ba-box{width:min(980px,100%);color:#fff;transform:translateY(10px) scale(.98);transition:transform .35s var(--ease)}.ba.on .ba-box{transform:none}
+.ba-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}.ba-title{font-size:20px;font-weight:900}
+.ba-x{all:unset;cursor:pointer;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-size:22px;background:rgba(255,255,255,.14)}.ba-x:hover{background:rgba(255,255,255,.25)}
+.ba-stage{position:relative;aspect-ratio:3/2;max-height:68vh;width:100%;border-radius:18px;overflow:hidden;background:#111;cursor:ew-resize;touch-action:none;user-select:none;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.ba-stage img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
+.ba-now{filter:saturate(1.2) contrast(1.07) brightness(1.03)}
+.ba-old{position:absolute;inset:0}.ba-old img{filter:sepia(.25) contrast(1.05)}
+.ba-bar{position:absolute;top:0;bottom:0;left:var(--p,50%);width:3px;margin-left:-1.5px;background:#fff;box-shadow:0 0 12px rgba(0,0,0,.5);pointer-events:none}
+.ba-knob{position:absolute;top:50%;left:50%;width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:50%;background:#fff;color:#1d1d1f;display:grid;place-items:center;box-shadow:0 4px 16px rgba(0,0,0,.4)}
+.ba-tag{position:absolute;top:14px;padding:5px 12px;border-radius:999px;font-size:13px;font-weight:800;background:rgba(0,0,0,.55);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);pointer-events:none}
+[dir=rtl] .t-old{right:14px}[dir=rtl] .t-now{left:14px}[dir=ltr] .t-old{left:14px}[dir=ltr] .t-now{right:14px}
+.ba-tag.t-old{background:rgba(142,22,33,.8)}.ba-tag.t-now{background:rgba(11,107,63,.85)}
+.ba-years{display:flex;gap:8px;justify-content:center;margin-top:12px}.ba-years:empty{display:none}
+.ba-years button{all:unset;cursor:pointer;padding:6px 16px;border-radius:999px;font-weight:800;font-size:14px;background:rgba(255,255,255,.14)}.ba-years button.on{background:#fff;color:#1d1d1f}
+.ba-cap{margin:12px 0 4px;text-align:center;font-size:15px;font-weight:700;line-height:1.7}
+.ba-cr{display:block;text-align:center;font-size:12px;opacity:.7}.ba-cr a{color:#fff}
+.bachip{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:800;padding:5px 12px;border-radius:999px;color:#fff;background:linear-gradient(90deg,#8e1621,#0b6b3f);box-shadow:0 2px 10px rgba(0,0,0,.25)}
+.bachip .i{width:15px;height:15px}
+.babadge{position:absolute;z-index:1;bottom:10px;inset-inline-start:10px;font-size:11.5px;font-weight:800;color:#fff;padding:3px 9px;border-radius:999px;background:linear-gradient(90deg,#8e1621,#0b6b3f);box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.feature .babadge{top:12px;bottom:auto;inset-inline-start:auto;inset-inline-end:12px}
+@media (max-width:640px){.ba{padding:10px}.ba-stage{aspect-ratio:4/5;max-height:64vh}.ba-cap{font-size:14px}}
+
 /* ---------- top bar ---------- */
 .topbar{position:fixed;top:calc(12px + var(--top));right:12px;left:12px;z-index:20;display:flex;gap:10px;align-items:flex-start;pointer-events:none}
 .brand{pointer-events:auto;display:flex;align-items:center;gap:12px;padding:10px 16px 10px 20px;border-radius:var(--r-lg)}
@@ -341,6 +367,12 @@ body{--top:calc(var(--safe-t) + var(--nd))}body.nd-on{--nd:72px}
   <div class="sh-body" id="shBody"></div>
 </aside>
 
+<div class="ba" id="ba" hidden tabindex="-1" role="dialog" aria-modal="true"><div class="ba-box">
+ <div class="ba-head"><b class="ba-title"></b><button class="ba-x" aria-label="إغلاق">×</button></div>
+ <div class="ba-stage"><img class="ba-now" alt="" draggable="false"><div class="ba-old"><img alt="" draggable="false" referrerpolicy="no-referrer"></div>
+  <div class="ba-bar"><span class="ba-knob"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+  <span class="ba-tag t-old"></span><span class="ba-tag t-now"></span></div>
+ <div class="ba-years"></div><p class="ba-cap"></p><small class="ba-cr"></small></div></div>
 <div class="viewer" id="viewer" role="dialog" aria-modal="true">
   <div class="bg"></div>
   <div class="track" id="track"></div>
@@ -570,23 +602,21 @@ function renderBody(){
     body.appendChild(a);requestAnimationFrame(()=>{const p=a.querySelector("p");if(p.scrollHeight<=p.clientHeight+2)a.querySelector(".more").remove();});}
   if(wf){const bar=document.createElement("div");bar.className="wbar";bar.innerHTML='<span>'+esc(wil(wf,g,1))+' • '+ctN(lms.length,'معلم واحد','معلمان','معالم','landmark','landmarks')+'</span><button>'+ic("x")+tr("showall")+'</button>';
     bar.querySelector("button").onclick=()=>{filter="all";moveThumb();renderBody();};body.appendChild(bar);
-    const W=g.wil.find(x=>x.n===wf);if(W)wikiCard(W.wt,body);}
-  if(filter==="all")wikiCard(g.wt,body);
+    }
   lms.forEach((l,k)=>{const ph=PHOTOS[l.k],T=TYPES[l.type];
     const b=document.createElement("button");
     if(k===0){b.className="feature";
       b.innerHTML='<img decoding="async" src="'+ph[0].t+'" alt="'+esc(ln(l))+'"><span class="cnt">'+ic("images")+Math.min(ph.length,MAXPH)+'</span><div class="ov"><div class="eyebrow">'+ic(l.type)+tn(l.type)+(l.w?' • '+esc(wil(l.w,g)):'')+'</div><h3>'+esc(ln(l))+'</h3><p>'+esc(ld(l))+'</p></div>';
       body.appendChild(b);if(lms.length>1){const h=document.createElement("div");h.className="sec-title";h.textContent=filter==="all"?tr("others"):tr("more");body.appendChild(h);const gr=document.createElement("div");gr.className="grid";gr.id="grid";body.appendChild(gr);}}
     else{b.className="tile";
-      b.innerHTML='<div class="ph"><img loading="lazy" src="'+ph[0].t+'" alt="'+esc(ln(l))+'">'+(ph.length>1?'<span class="cnt">'+ic("images")+Math.min(ph.length,MAXPH)+'</span>':'')+'</div><div class="cap"><b>'+esc(ln(l))+'</b><small style="color:'+T.c+'">'+ic(l.type)+tn(l.type)+'</small><span class="w">'+esc(wil(l.w,g))+'</span></div>';
+      b.innerHTML='<div class="ph"><img loading="lazy" src="'+ph[0].t+'" alt="'+esc(ln(l))+'">'+(ph.length>1?'<span class="cnt">'+ic("images")+Math.min(ph.length,MAXPH)+'</span>':'')+(HIST[l.k]?'<span class="babadge">'+(EN()?"Then &amp; now":"قبل وبعد")+'</span>':'')+'</div><div class="cap"><b>'+esc(ln(l))+'</b><small style="color:'+T.c+'">'+ic(l.type)+tn(l.type)+'</small><span class="w">'+esc(wil(l.w,g))+'</span></div>';
       $("grid").appendChild(b);}
     b.onclick=()=>openViewer(l,cur,b.querySelector("img"));});
   if(filter==="all"&&g.wil){const h=document.createElement("div");h.className="sec-title";h.textContent=(EN()?"Wilayats (":"الولايات (")+g.wil.length+")";body.appendChild(h);
     const L=document.createElement("div");L.className="wlist";
-    g.wil.forEach(w=>{const n=g.landmarks.filter(l=>l.w===w.n&&PHOTOS[l.k]).length,r=document.createElement("button");r.className="wrow"+(n||w.wt?" has":"");
-      r.innerHTML='<span class="wi">'+ic("landmark")+'</span><span class="wt"><b>'+esc(wn(w))+'</b><small>'+esc(wd(w))+'</small></span>'+(n?'<span class="wn">'+n+ic("chev")+'</span>':w.wt?'<span class="wn exp">'+ic("chevd")+'</span>':'');
+    g.wil.forEach(w=>{const n=g.landmarks.filter(l=>l.w===w.n&&PHOTOS[l.k]).length,r=document.createElement("button");r.className="wrow"+(n?" has":"");
+      r.innerHTML='<span class="wi">'+ic("landmark")+'</span><span class="wt"><b>'+esc(wn(w))+'</b><small>'+esc(wd(w))+'</small></span>'+(n?'<span class="wn">'+n+ic("chev")+'</span>':'');
       if(n)r.onclick=()=>{filter="w:"+w.n;moveThumb();renderBody();$("shBody").scrollTop=0;};
-      else if(w.wt)r.onclick=()=>{const nx=r.nextElementSibling;if(nx&&nx.classList.contains("wiki")){nx.remove();r.classList.remove("open");return;}r.classList.add("open");wikiCard(w.wt,L,r.nextElementSibling);};
       else r.tabIndex=-1;L.appendChild(r);});
     body.appendChild(L);}
   const c=document.createElement("p");c.className="credit";c.textContent=tr("credit");body.appendChild(c);
@@ -731,6 +761,42 @@ document.addEventListener("keydown",e=>{if((e.key==="k"&&(e.metaKey||e.ctrlKey))
 
 /* ---------- viewer (Photos style) ---------- */
 const V=$("viewer"),track=$("track");let vl=null,vlist=[],vi=0,zoom=1;
+
+/* ---------- then & now (historic photos from Wikimedia Commons, shown not stored) ---------- */
+const HIST={
+ msq_jalali:[{n:"Oman 1973-74 (557108313).jpg",w:1200,y:"1973",a:"Brian Harrington Spier",l:"CC BY-SA 2.0",c:"قلعة الجلالي على صخرتها عند مدخل ميناء مسقط، عام ١٩٧٣",c_en:"Al Jalali Fort on its rock at the mouth of Muscat harbour, 1973"},
+   {n:"Muscat harbor.jpg",w:1200,y:"1903",a:"Hilprecht, Benzinger, Hommel et al.",l:"Public domain",c:"ميناء مسقط وسفنه الشراعية في كتاب نُشر عام ١٩٠٣",c_en:"Muscat harbour and its dhows, from a book published in 1903"}],
+ msq_alam:[{n:"No. 3. Muskat from the harbour RMG PW4795.jpg",w:960,y:"1813",a:"John Heaviside Clark, after Richard Temple",l:"Public domain",c:"مسقط القديمة كما تبدو من الميناء – لوحة محفورة عام ١٨١٣",c_en:"Old Muscat seen from the harbour – engraving, 1813"}],
+ msq_mutrahfort:[{n:"No. 4. A View of Mutra from the east RMG PW4796.jpg",w:960,y:"1813",a:"John Heaviside Clark, after Richard Temple",l:"Public domain",c:"مطرح من جهة الشرق – لوحة محفورة عام ١٨١٣",c_en:"Mutrah from the east – engraving, 1813"}],
+ nb_sohar:[{n:"Oman 1973 - 74 (680511491).jpg",w:1200,y:"1973",a:"Brian Harrington Spier",l:"CC BY-SA 2.0",c:"الطريق الترابي إلى صحار بين النخيل، وتظهر القلعة في الوسط، عام ١٩٧٣",c_en:"The dirt road into Sohar through the palms, the fort just visible in the centre, 1973"}],
+ sb_rustaq:[{n:"Oman 1973 - 74 (620866923).jpg",w:1200,y:"1973",a:"Brian Harrington Spier",l:"CC BY-SA 2.0",c:"سوق الرستاق القديم عام ١٩٧٣",c_en:"The old souq of Rustaq, 1973"}],
+ df_mirbat:[{n:"Over Mirbat in the early Seventies.jpg",w:1200,y:"1972",a:"Brian Harrington Spier",l:"CC BY-SA 2.0",c:"مرباط من الجو أوائل السبعينيات (١٩٧٢)",c_en:"Mirbat from the air in the early 1970s (1972)"}]
+};
+const AR_DIG=x=>EN()?x:String(x).replace(/\d/g,d=>"٠١٢٣٤٥٦٧٨٩"[d]);
+let baL=null,baI=0,baPos=.5;
+function baSet(p){baPos=Math.max(0,Math.min(1,p));const B=$("ba"),rtl=!EN();B.style.setProperty("--p",(baPos*100)+"%");
+  B.querySelector(".ba-old").style.clipPath=rtl?"inset(0 0 0 "+(baPos*100)+"%)":"inset(0 "+(100-baPos*100)+"% 0 0)";}
+function baShow(i){const h=HIST[baL.k][i];baI=i;const B=$("ba");
+  B.querySelector(".ba-old img").src=cthumb(h.n,h.w);
+  B.querySelector(".t-old").textContent=(EN()?"Then · ":"قبل · ")+AR_DIG(h.y);B.querySelector(".t-now").textContent=EN()?"Today":"اليوم";
+  B.querySelector(".ba-cap").textContent=EN()?h.c_en:h.c;
+  B.querySelector(".ba-cr").innerHTML=(EN()?"Old photo: ":"الصورة القديمة: ")+esc(h.a)+" • "+esc(h.l)+' • <a href="https://commons.wikimedia.org/wiki/File:'+encodeURIComponent(h.n.replace(/ /g,"_"))+'" target="_blank" rel="noopener">'+(EN()?"Wikimedia Commons":"ويكيميديا كومنز")+'</a>';
+  B.querySelectorAll(".ba-years button").forEach((b,k)=>b.classList.toggle("on",k===i));}
+function openBA(l){baL=l;const B=$("ba"),H=HIST[l.k],now=PHOTOS[l.k][0];
+  B.querySelector(".ba-now").src=now.f;B.querySelector(".ba-title").textContent=ln(l);
+  B.querySelector(".ba-years").innerHTML=H.length>1?H.map((h,k)=>'<button>'+AR_DIG(h.y)+'</button>').join(""):"";
+  B.querySelectorAll(".ba-years button").forEach((b,k)=>b.onclick=()=>baShow(k));
+  baShow(0);B.hidden=false;requestAnimationFrame(()=>B.classList.add("on"));
+  /* hint: sweep the divider once */
+  let t0=null;baSet(.5);const sw=ts=>{if(!t0)t0=ts;const k=(ts-t0)/1400;if(k>=1||B.dataset.drag){if(!B.dataset.drag)baSet(.5);return;}baSet(.5+Math.sin(k*Math.PI*2)*.22);requestAnimationFrame(sw);};requestAnimationFrame(sw);}
+function closeBA(){const B=$("ba");B.classList.remove("on");setTimeout(()=>B.hidden=true,250);}
+(function(){const B=$("ba"),st=B.querySelector(".ba-stage");let dn=false;
+  const mv=e=>{const r=st.getBoundingClientRect();baSet((e.clientX-r.left)/r.width);};
+  st.addEventListener("pointerdown",e=>{dn=true;B.dataset.drag=1;st.setPointerCapture(e.pointerId);mv(e);});
+  st.addEventListener("pointermove",e=>{if(dn)mv(e);});
+  st.addEventListener("pointerup",()=>{dn=false;});st.addEventListener("pointercancel",()=>{dn=false;});
+  B.querySelector(".ba-x").onclick=closeBA;B.addEventListener("click",e=>{if(e.target===B)closeBA();});
+  })();
 function openViewer(l,gi,fromImg){
   vl=l;vlist=PHOTOS[l.k].slice(0,MAXPH);vi=0;zoom=1;
   $("vTitle").textContent=ln(l);$("vSub").textContent=gfull(GOVS[gi])+" • "+tn(l.type);$("vDesc").textContent=ld(l);
@@ -739,9 +805,10 @@ function openViewer(l,gi,fromImg){
     if(l.w)F.push('<span>'+ic("pin")+esc(wil(l.w,GOVS[gi],1))+'</span>');if(l.dyn)F.push('<span>'+(EN()?"Added from Wikidata":"مضاف من ويكي بيانات")+'</span>');
     if(l.yr)F.push('<span>'+(EN()?"Since ":"منذ ")+l.yr+'</span>');
     if(l.q)F.push('<a href="https://www.wikidata.org/wiki/'+l.q+'" target="_blank" rel="noopener">'+(EN()?"Wikidata":"ويكي بيانات")+' ↗</a>');
-    $("vFacts").innerHTML=F.join("");}
+    if(HIST[l.k])F.unshift('<button class="bachip" type="button">'+ic("images")+(EN()?"Then &amp; now":"قبل وبعد")+'</button>');
+    $("vFacts").innerHTML=F.join("");const bc=$("vFacts").querySelector(".bachip");if(bc)bc.onclick=()=>openBA(l);}
   const vb=$("vWiki"),vp=$("vWpanel");vp.hidden=true;vp.innerHTML="";vb.hidden=true;
-  if(l.wt){vb.innerHTML=ic("book")+tr("readwiki");wiki(l.wt).then(w=>{if(vl!==l)return;vb.hidden=false;
+  if(false){wiki(l.wt).then(w=>{if(vl!==l)return;vb.hidden=false;
     vb.onclick=()=>{vp.hidden=!vp.hidden;if(!vp.innerHTML)vp.innerHTML=esc(wbrief(w.x,320))+' <a href="'+w.url+'" target="_blank" rel="noopener">'+tr("full")+'</a>';};}).catch(()=>{});}
   track.innerHTML="";$("strip").innerHTML="";addSlides(vlist,0,l);
   if(vlist.length<MAXPH)commonsFor(l).then(extra=>{extra=extra.slice(0,MAXPH-vlist.length);if(vl!==l||!extra.length)return;const n0=vlist.length;vlist.push(...extra);addSlides(extra,n0,l);
@@ -797,7 +864,7 @@ function go(n,animate=true){if(!vlist.length)return;vi=Math.max(0,Math.min(vlist
 function setZoom(z,ox=0,oy=0){zoom=z;const img=track.children[vi]?.querySelector("img");if(img)img.style.transform=z===1?"":"translate("+ox+"px,"+oy+"px) scale("+z+")";}
 function closeViewer(){V.classList.remove("ready");setTimeout(()=>{V.classList.remove("open");track.innerHTML="";},300);}
 $("vClose").onclick=closeViewer;$("vPrev").onclick=()=>go(vi-1);$("vNext").onclick=()=>go(vi+1);
-document.addEventListener("keydown",e=>{if(!V.classList.contains("open")){if(e.key==="Escape")closeSheet();return;}
+document.addEventListener("keydown",e=>{if(!$("ba").hidden){if(e.key==="Escape")closeBA();if(e.key==="ArrowLeft")baSet(baPos-.05);if(e.key==="ArrowRight")baSet(baPos+.05);return;}if(!V.classList.contains("open")){if(e.key==="Escape")closeSheet();return;}
   if(e.key==="Escape")closeViewer();const fw=EN()?"ArrowRight":"ArrowLeft",bk=EN()?"ArrowLeft":"ArrowRight";if(e.key===fw)go(vi+1);if(e.key===bk)go(vi-1);});
 /* gestures: swipe, swipe-down to dismiss, double-tap zoom, tap to toggle chrome */
 (()=>{let s=null,lastTap=0;
