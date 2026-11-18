@@ -3,9 +3,11 @@ import json, os, time, urllib.request, io
 from PIL import Image
 os.makedirs("img/ba", exist_ok=True)
 src = json.load(open("ba_sources.json"))
-UA = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36", "Accept": "image/avif,image/webp,image/*,*/*;q=0.8"}
+UA = {"User-Agent": "LandmarksPhotoFetch/1.0 (https://github.com/said42882006-stack/oman-landmarks) python-urllib"}
 ok = fail = 0
 for e in src:
+    if "iiif.qdl.qa" in e["u"]:
+        continue  # QDL blocks automated downloads; those stay linked to the library
     out = f"img/ba/{e['id']}.jpg"
     if os.path.exists(out):
         ok += 1; continue
