@@ -40,7 +40,7 @@ svg.i{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-l
 .glass{background:var(--glass);-webkit-backdrop-filter:saturate(180%) blur(24px);backdrop-filter:saturate(180%) blur(24px);border:.5px solid var(--glass-border);box-shadow:var(--shadow)}
 
 /* ---------- map ---------- */
-#stage{position:fixed;inset:0;background:radial-gradient(120% 90% at 60% 40%,#3a2340 0%,#2b2240 45%,#1f1a30 100%)}
+#stage{position:fixed;inset:0;background-color:#2a2240;background-image:linear-gradient(180deg,rgba(42,43,71,0) 0%,rgba(42,43,71,.55) 38%,rgba(42,43,71,.72) 62%,rgba(42,43,71,.12) 100%),radial-gradient(70% 50% at 70% 30%,rgba(212,163,115,.16),transparent 70%),repeating-linear-gradient(0deg,rgba(0,0,0,.17) 0 1px,transparent 1px 5px),linear-gradient(90deg,#3c192a 0.00% 17.50%,#6c213e 17.50% 36.88%,#a77558 36.88% 38.75%,#454681 38.75% 48.12%,#a76c5a 48.12% 50.62%,#bb9da9 50.62% 53.12%,#5e2f4b 53.12% 54.38%,#ead2dd 54.38% 56.25%,#a56f5b 56.25% 58.12%,#454681 58.12% 68.12%,#9a6560 68.12% 70.62%,#6c213e 70.62% 89.38%,#3a1b2f 89.38% 100.00%);background-size:100% 100%,100% 100%,100% 100%,var(--rw,420px) 100%;background-position:center;background-repeat:no-repeat,no-repeat,repeat,repeat-x}@media (max-width:640px){#stage{--rw:300px}}
 svg#map{width:100%;height:100%;display:block;touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab}
 svg#map.dragging{cursor:grabbing}
 .gov{cursor:pointer;outline:none}
@@ -334,9 +334,8 @@ body{--top:calc(var(--safe-t) + var(--nd))}body.nd-on{--nd:72px}
   <svg id="map" viewBox="0 0 810 1110" preserveAspectRatio="xMidYMid meet" role="group" aria-label="خريطة محافظات سلطنة عُمان">
     <defs><linearGradient id="fh" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#000"/><stop offset=".05" stop-color="#fff"/><stop offset=".95" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient>
     <linearGradient id="fv" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#000"/><stop offset=".04" stop-color="#fff"/><stop offset=".96" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient>
-    <mask id="mh" maskUnits="userSpaceOnUse" x="0" y="0" width="810" height="1110"><rect width="810" height="1110" fill="url(#fh)"/></mask><mask id="mv" maskUnits="userSpaceOnUse" x="0" y="0" width="810" height="1110"><rect width="810" height="1110" fill="url(#fv)"/></mask><pattern id="rib" patternUnits="userSpaceOnUse" width="405" height="5"><rect x="0.00" width="70.88" height="5" fill="#3c192a"/><rect x="70.88" width="78.47" height="5" fill="#6c213e"/><rect x="149.34" width="7.59" height="5" fill="#a77558"/><rect x="156.94" width="37.97" height="5" fill="#454681"/><rect x="194.91" width="10.12" height="5" fill="#a76c5a"/><rect x="205.03" width="10.12" height="5" fill="#bb9da9"/><rect x="215.16" width="5.06" height="5" fill="#5e2f4b"/><rect x="220.22" width="7.59" height="5" fill="#ead2dd"/><rect x="227.81" width="7.59" height="5" fill="#a56f5b"/><rect x="235.41" width="40.50" height="5" fill="#454681"/><rect x="275.91" width="10.12" height="5" fill="#9a6560"/><rect x="286.03" width="75.94" height="5" fill="#6c213e"/><rect x="361.97" width="43.03" height="5" fill="#3a1b2f"/><rect width="405" height=".9" fill="#000" opacity=".18"/><rect y="2.5" width="405" height=".5" fill="#fff" opacity=".05"/></pattern><linearGradient id="ribFade" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#2a2b47" stop-opacity="0"/><stop offset=".38" stop-color="#2a2b47" stop-opacity=".55"/><stop offset=".62" stop-color="#2a2b47" stop-opacity=".75"/><stop offset="1" stop-color="#2a2b47" stop-opacity=".15"/></linearGradient><radialGradient id="ribGlow" cx=".75" cy=".35" r=".7"><stop offset="0" stop-color="#d4a373" stop-opacity=".18"/><stop offset="1" stop-color="#d4a373" stop-opacity="0"/></radialGradient><mask id="seaM" maskUnits="userSpaceOnUse" x="0" y="0" width="810" height="1110"><image href="img/sea_mask.png" x="0" y="0" width="810" height="1110" preserveAspectRatio="none"/></mask></defs>
-    <g mask="url(#mv)"><image id="bg" href="img/topo_lo.jpg" x="0" y="0" width="810" height="1110" preserveAspectRatio="none" mask="url(#mh)"/></g>
-    <g id="sea" mask="url(#mv)"><g mask="url(#mh)"><g mask="url(#seaM)"><rect width="810" height="1110" fill="url(#rib)"/><rect width="810" height="1110" fill="url(#ribFade)"/><rect width="810" height="1110" fill="url(#ribGlow)"/></g></g></g>
+    <mask id="mh" maskUnits="userSpaceOnUse" x="0" y="0" width="810" height="1110"><rect width="810" height="1110" fill="url(#fh)"/></mask><mask id="mv" maskUnits="userSpaceOnUse" x="0" y="0" width="810" height="1110"><rect width="810" height="1110" fill="url(#fv)"/></mask><mask id="landM" maskUnits="userSpaceOnUse" x="0" y="0" width="810" height="1110"><image href="img/land_mask.png" x="0" y="0" width="810" height="1110" preserveAspectRatio="none"/></mask></defs>
+    <g mask="url(#mv)"><g mask="url(#landM)" opacity=".42"><image id="bg" href="img/topo_lo.jpg" x="0" y="0" width="810" height="1110" preserveAspectRatio="none" mask="url(#mh)"/></g><g mask="url(#landM)"><image id="bg2" href="img/topo_lo.jpg" x="0" y="0" width="810" height="1110" preserveAspectRatio="none" clip-path="url(#omanC)"/></g></g>
     <g id="borders" aria-hidden="true"></g>
     <g id="govs"></g>
     <g id="pins"></g>
@@ -443,6 +442,7 @@ function drawPlaces(){const g=$("places");g.innerHTML="";plEls.length=0;
   setVB(vb,true);}
 function lname(o){return (typeof LANG!=="undefined"&&LANG==="en")?o.en:o.ar;}
 const nodes=[],lbls=[];
+{const cp=el("clipPath",{id:"omanC"},svg.querySelector("defs"));SHAPES.forEach(sh=>el("path",{d:sh.d},cp));}
 SHAPES.forEach((sh,i)=>{
   const g=GOVS[i];
   const n=el("g",{class:"gov",tabindex:"0",role:"button","aria-label":gfull(g)},$("govs"));
@@ -452,12 +452,12 @@ SHAPES.forEach((sh,i)=>{
   nodes.push(n);el("path",{d:sh.d,class:"bd"},$("borders"));
   const [x,y,s]=g.label;const t=el("text",{class:"lbl",x,y},$("labels"));t.textContent=gn(g);t.dataset.s=s;lbls.push(t);
 });
-function visibleRect(){const W=svg.clientWidth,H=svg.clientHeight;
-  if(!$("sheet").classList.contains("open"))return{x:0,y:70,w:W,h:H-70,W,H};
-  if(isMobile()){const top=innerHeight-$("sheet").offsetHeight*Math.min(detent,.5);return{x:0,y:64,w:W,h:Math.max(140,top-64),W,H};}
-  const sh=$("sheet");if(sh.classList.contains("mini"))return{x:0,y:70,w:W,h:H-70,W,H};
+function visibleRect(){const W=svg.clientWidth,H=svg.clientHeight,T=(document.getElementById('hdr')?.offsetHeight||64)+6;
+  if(!$("sheet").classList.contains("open"))return{x:0,y:T,w:W,h:H-T,W,H};
+  if(isMobile()){const top=innerHeight-$("sheet").offsetHeight*Math.min(detent,.5);return{x:0,y:T,w:W,h:Math.max(140,top-T),W,H};}
+  const sh=$("sheet");if(sh.classList.contains("mini"))return{x:0,y:T,w:W,h:H-T,W,H};
   const L=sh.offsetLeft,Rt=L+sh.offsetWidth,lw=L-16,rw=W-Rt-16;
-  return lw>=rw?{x:0,y:70,w:Math.max(160,lw),h:H-70,W,H}:{x:Rt+16,y:70,w:Math.max(160,rw),h:H-70,W,H};}
+  return lw>=rw?{x:0,y:T,w:Math.max(160,lw),h:H-T,W,H}:{x:Rt+16,y:T,w:Math.max(160,rw),h:H-T,W,H};}
 function fitBox(b,pad,maxZ){const r=visibleRect();
   const bw=b.w*(1+pad),bh=b.h*(1+pad);let s=Math.min(r.w/bw,r.h/bh);
   const s0=Math.min(r.W/810,r.H/1110);if(maxZ)s=Math.min(s,s0*maxZ);
@@ -897,7 +897,7 @@ function applyLang(){const H=document.documentElement;H.lang=LANG;H.dir=EN()?"lt
 $("langBtn").onclick=()=>{LANG=EN()?"ar":"en";try{localStorage.setItem("lang",LANG);}catch(e){}applyLang();drawPlaces();drawPins();};
 /* init */
 applyLang();setVB(fitBox(FULL,.02));drawPlaces();drawPins();
-{const hd=new Image();hd.onload=()=>$("bg").setAttribute("href","img/topo_hd.jpg");hd.src="img/topo_hd.jpg";}
+{const hd=new Image();hd.onload=()=>{$("bg").setAttribute("href","img/topo_hd.jpg");$("bg2").setAttribute("href","img/topo_hd.jpg");};hd.src="img/topo_hd.jpg";}
 </script>
 </body>
 </html>
