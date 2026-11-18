@@ -531,11 +531,11 @@ function declutter(){dcW=vb.w;const W=SW(),k=W/vb.w,u=1/k,rtl=document.documentE
 function drawPins(){const P=$("pins");P.innerHTML="";pinEls.length=0;
   GOVS.forEach((g,gi)=>g.landmarks.forEach(l=>{if(!l.ll||!PHOTOS[l.k])return;const [x,y]=geo(...l.ll);
     const c=el("circle",{cx:x,cy:y,class:"pin hide",fill:TYPES[l.type].c},P);const tt=el("title",{},c);tt.textContent=ln(l);
-    c.addEventListener("click",e=>{e.stopPropagation();if(moved)return;const same=cur===gi;if(!same)select(gi);setTimeout(()=>openViewer(l,gi,null),same?0:600);});
+    c.addEventListener("click",e=>{e.stopPropagation();if(moved)return;const same=cur===gi;if(!same)select(gi);setTimeout(()=>openViewer(l,gi,null),same?0:380);});
     pinEls.push({c,gi,l});}));setVB(vb,true);}
 function stopAll(){cancelAnimationFrame(anim);cancelAnimationFrame(zRaf);zRaf=0;zT=null;cancelAnimationFrame(inRaf);inRaf=0;}
 let zRaf=0,zT=null,inRaf=0;
-function fly(to,dur=820){stopAll();to=clampV(to);const from={...vb},t0=performance.now();
+function fly(to,dur=640){stopAll();to=clampV(to);const from={...vb},t0=performance.now();
   const ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
   const fc=[from.x+from.w/2,from.y+from.h/2],tc=[to.x+to.w/2,to.y+to.h/2];
   const step=n=>{const t=Math.min(1,(n-t0)/dur),k=ease(t);const w=from.w*Math.pow(to.w/from.w,k),h=w*to.h/to.w;
@@ -547,7 +547,7 @@ function zoomAt(f,cx,cy){const r=svg.getBoundingClientRect();cx??=r.width/2;cy??
   const base=zT||vb;const px=base.x+cx/r.width*base.w,py=base.y+cy/r.height*base.h;
   const w=Math.max(LIM.minW,Math.min(maxW(),base.w/f)),h=w*base.h/base.w;zT=clampV({x:px-cx/r.width*w,y:py-cy/r.height*h,w,h});
   if(!zRaf)zRaf=requestAnimationFrame(zStep);}
-function zStep(){const a=.3;const v={x:vb.x+(zT.x-vb.x)*a,y:vb.y+(zT.y-vb.y)*a,w:vb.w+(zT.w-vb.w)*a,h:vb.h+(zT.h-vb.h)*a};
+function zStep(){const a=.34;const v={x:vb.x+(zT.x-vb.x)*a,y:vb.y+(zT.y-vb.y)*a,w:vb.w+(zT.w-vb.w)*a,h:vb.h+(zT.h-vb.h)*a};
   if(Math.abs(v.w-zT.w)<zT.w*.002&&Math.abs(v.x-zT.x)<zT.w*.001){setVB(zT);zT=null;zRaf=0;declutter();return;}setVB(v);zRaf=requestAnimationFrame(zStep);}
 function zoomBy(f,cx,cy){zoomAt(f,cx,cy);}
 $("zIn").onclick=()=>zoomBy(1.6);$("zOut").onclick=()=>zoomBy(1/1.6);
@@ -572,7 +572,7 @@ const endPtr=e=>{const wasPinch=ptrs.size>=2;ptrs.delete(e.pointerId);if(ptrs.si
   if(!ptrs.size){svg.classList.remove("dragging");
     if(moved&&!wasPinch){const now=performance.now(),rec=vel.filter(v=>now-v.t<90);let vx=0,vy=0,tt=0;rec.forEach(v=>{vx+=v.dx;vy+=v.dy;tt+=v.dt;});
       if(tt>0){vx/=tt;vy/=tt;const r=svg.getBoundingClientRect();let lt=now;
-        const glide=n=>{const dt=Math.min(32,n-lt);lt=n;const fr=Math.pow(.94,dt/16);vx*=fr;vy*=fr;if(Math.hypot(vx,vy)<.02){inRaf=0;return;}
+        const glide=n=>{const dt=Math.min(32,n-lt);lt=n;const fr=Math.pow(.95,dt/16);vx*=fr;vy*=fr;if(Math.hypot(vx,vy)<.02){inRaf=0;return;}
           setVB(clampV({...vb,x:vb.x-vx*dt/r.width*vb.w,y:vb.y-vy*dt/r.height*vb.h}));inRaf=requestAnimationFrame(glide);};
         if(Math.hypot(vx,vy)>.15)inRaf=requestAnimationFrame(glide);}}
     if(moved&&wasPinch)declutter();
@@ -622,8 +622,10 @@ function renderSheet(){
 function moveThumb(){const seg=$("seg"),b=seg.querySelector('[data-t="'+filter+'"]'),th=seg.querySelector(".thumb");if(!b){th.style.width="0";seg.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",false));return;}
   requestAnimationFrame(()=>{th.style.left=b.offsetLeft+"px";th.style.width=b.offsetWidth+"px";});
   seg.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));}
+const TOP=new Set(["mus_khasab","bur_hilla","nb_sohar","sb_nakhal","msq_alam","dh_bat","dk_nizwa","ns_wahiba","jb_hamouda","wu_port","df_baleed"]);
+const rank=l=>(TOP.has(l.k)?2:0)+(HIST[l.k]?1:0);
 function renderBody(){
-  const g=GOVS[cur],wf=filter.startsWith("w:")?filter.slice(2):null,lms=g.landmarks.filter(l=>PHOTOS[l.k]&&(filter==="all"||l.type===filter||l.w===wf)).sort((a,b)=>(HIST[b.k]?1:0)-(HIST[a.k]?1:0));
+  const g=GOVS[cur],wf=filter.startsWith("w:")?filter.slice(2):null,lms=g.landmarks.filter(l=>PHOTOS[l.k]&&(filter==="all"||l.type===filter||l.w===wf)).sort((a,b)=>rank(b)-rank(a));
   const body=$("shBody");body.innerHTML="";body.style.setProperty("--gc",g.color);
   if(filter==="all"&&(EN()?g.hist_en:g.hist)){const a=document.createElement("div");a.className="about clamp";
     a.innerHTML='<h4>'+ic("scroll")+tr("about")+'</h4><p>'+esc(EN()?g.hist_en:g.hist)+'</p><button class="more">'+tr("more")+'</button>';
@@ -782,7 +784,7 @@ function search(){const v=norm(q.value.trim());if(!v){res.classList.remove("show
   res.classList.add("show");hl();
   res.querySelectorAll("button").forEach(b=>b.onclick=()=>pick(rlist[+b.dataset.k]));}
 function hl(){res.querySelectorAll("button").forEach((b,k)=>b.classList.toggle("act",k===ri));}
-function pick(x){res.classList.remove("show");q.value="";q.blur();if(x.gov!==undefined){select(x.gov);return;}select(x.gi);setTimeout(()=>openViewer(x.l,x.gi,null),450);}
+function pick(x){res.classList.remove("show");q.value="";q.blur();if(x.gov!==undefined){select(x.gov);return;}select(x.gi);setTimeout(()=>openViewer(x.l,x.gi,null),320);}
 q.addEventListener("input",search);
 q.addEventListener("keydown",e=>{if(!res.classList.contains("show"))return;if(e.key==="ArrowDown"){ri=Math.min(ri+1,rlist.length-1);hl();e.preventDefault();}if(e.key==="ArrowUp"){ri=Math.max(ri-1,0);hl();e.preventDefault();}if(e.key==="Enter"&&rlist[ri])pick(rlist[ri]);if(e.key==="Escape"){res.classList.remove("show");q.blur();}});
 document.addEventListener("click",e=>{if(!e.target.closest(".search"))res.classList.remove("show");});
@@ -793,6 +795,7 @@ const V=$("viewer"),track=$("track");let vl=null,vlist=[],vi=0,zoom=1;
 
 /* ---------- then & now (historic photos from Wikimedia Commons, shown not stored) ---------- */
 const HIST={
+ dk_jakhdar:[{n:"Sultan's Armed Forces 1973 - 74 (636867363).jpg",w:960,y:"1973",a:"Flickr / Wikimedia Commons",l:"CC BY-SA 2.0",c:"حمير برية ترعى على هضبة الجبل الأخضر، ١٩٧٣–١٩٧٤",c_en:"Wild donkeys grazing on the Jebel Akhdar plateau, 1973–74"}],
  ss_dhow:[{u:"https://iiif.qdl.qa/iiif/images/81055/vdc_100000000831.0x0002ee/IOR_R_15_6_102_0011.jp2/pct:6.5,21,77.5,65/!1000,1000/0/default.jpg",y:"1934",a:"Royal Air Force (203 Sqn) – British Library / Qatar Digital Library",l:"Public domain / OGL",p:"https://www.qdl.qa/en/archive/81055/vdc_100062240206.0x00000c",c:"خور صور والسفن الشراعية الراسية فيه من الجو، ١٩ أكتوبر ١٩٣٤",c_en:"The Sur lagoon with dhows at anchor, from the air, 19 October 1934"},
    {u:"https://iiif.qdl.qa/iiif/images/81055/vdc_100000000831.0x0002ee/IOR_R_15_6_102_0013.jp2/pct:5.5,22,79,72/!1000,1000/0/default.jpg",y:"1934",a:"Royal Air Force (203 Sqn) – British Library / Qatar Digital Library",l:"Public domain / OGL",p:"https://www.qdl.qa/en/archive/81055/vdc_100062240206.0x00000e",c:"بيوت صور على ضفتي الخور من الجو، ١٩ أكتوبر ١٩٣٤",c_en:"Sur's houses on both banks of the lagoon, from the air, 19 October 1934"}],
  mus_telegraph:[{n:"Masandam; with Telegraph Island Station on Elphinstone Island.jpg",w:960,y:"~1865",a:"F. J. Goldsmid, Telegraph and Travel (1874)",l:"Public domain",c:"محطة التلغراف البريطانية على جزيرة التلغراف في خور الشم – نقش من ستينيات القرن التاسع عشر",c_en:"The British telegraph station on Telegraph Island, Khor Ash Sham – engraving, 1860s"},
